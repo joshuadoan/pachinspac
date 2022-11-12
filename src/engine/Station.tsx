@@ -1,12 +1,14 @@
 import { Actor, Color, vec } from "excalibur";
+import randomName from "@scaleway/random-name";
 
-export class Player extends Actor {
+export class Station extends Actor {
   constructor() {
     super({
       pos: vec(100, 100),
-      width: 100,
-      height: 100,
-      color: Color.Magenta,
+      width: 10,
+      height: 10,
+      color: Color.Orange,
+      name: randomName("The", " "),
     });
   }
 
