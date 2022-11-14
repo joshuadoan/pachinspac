@@ -1,7 +1,10 @@
-import { Actor, Color, vec } from "excalibur";
+import { Color, vec } from "excalibur";
 import randomName from "@scaleway/random-name";
+import { Meeple } from "./Meeple";
+import { ReactNode } from "react";
+import { WrenchIcon } from "@heroicons/react/24/solid";
 
-export class Station extends Actor {
+export class Station extends Meeple {
   constructor() {
     super({
       pos: vec(100, 100),
@@ -11,6 +14,8 @@ export class Station extends Actor {
       name: randomName("The", " "),
     });
   }
+
+  public icon: ReactNode = (<WrenchIcon className="h-6 w-6" />);
 
   onInitialize() {
     this.on("pointerup", () => {

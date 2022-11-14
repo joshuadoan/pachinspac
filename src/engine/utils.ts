@@ -1,4 +1,5 @@
-import { Engine, vec } from "excalibur";
+import { Actor, Engine, vec } from "excalibur";
+import { Meeple } from "./Meeple";
 
 /**
  * Shuffles array
@@ -27,3 +28,9 @@ export function getRandomScreenPosition(game: Engine) {
 export function arrayOfThings<Type>(number: number, expression: () => Type) {
   return [...Array(number)].map(expression);
 }
+
+/**
+ * Type guard for converting Actors to our custom Actor called Meeple
+ */
+export const isMeeple = (shape: Actor): shape is Meeple =>
+  shape instanceof Meeple;

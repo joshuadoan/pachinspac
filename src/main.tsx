@@ -10,9 +10,10 @@ import App from "./App";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path=":id" element={<p>nknknkj</p>} />
-    </Route>
+    <>
+      <Route path="/:id" element={<App />} />
+      <Route path="*" element={<App />} />
+    </>
   )
 );
 
