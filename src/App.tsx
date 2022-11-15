@@ -1,4 +1,3 @@
-import cx from "classnames";
 import { PaperAirplaneIcon, WrenchIcon } from "@heroicons/react/24/solid";
 
 import ActorList from "./components/ActorList";
@@ -26,42 +25,6 @@ function App() {
 
   return (
     <div className="absolute h-screen overflow-hidden flex flex-col p-4 font-mono">
-      <div className="mb-4 flex gap-4">
-        <Button
-          onClick={() =>
-            dispatch({
-              type: "update-filters",
-              payload: {
-                filters: {
-                  ships: !state.filters.ships,
-                },
-              },
-            })
-          }
-          className={cx({
-            "opacity-50": !state.filters.ships,
-          })}
-        >
-          <PaperAirplaneIcon className="h-2 w-2" />
-        </Button>
-        <Button
-          onClick={() =>
-            dispatch({
-              type: "update-filters",
-              payload: {
-                filters: {
-                  stations: !state.filters.stations,
-                },
-              },
-            })
-          }
-          className={cx({
-            "opacity-50": !state.filters.stations,
-          })}
-        >
-          <WrenchIcon className="h-2 w-2" />
-        </Button>
-      </div>
       <Header dispatch={dispatch} state={state} />
       <main className="flex-1 overflow-hidden">
         {selected ? (

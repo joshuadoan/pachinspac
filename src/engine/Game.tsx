@@ -1,5 +1,10 @@
 import { Color, DisplayMode, Engine, Timer, vec } from "excalibur";
-import { arrayOfThings, getRandomScreenPosition, isMeeple } from "./utils";
+import {
+  arrayOfThings,
+  flyToRandomStation,
+  getRandomScreenPosition,
+  isMeeple,
+} from "./utils";
 import { Ship } from "./Ship";
 import { Station } from "./Station";
 
@@ -36,28 +41,7 @@ export class Game extends Engine {
 
       ship.color = colors[Math.floor(Math.random() * colors.length)];
       let timer = new Timer({
-        fcn: () => {
-          let d = 0;
-          // let station = stations.reduce(function (
-          //   previousValue: Station,
-          //   currentValue: Station
-          // ) {
-          //   let a = ship.pos.x - currentValue.pos.x;
-          //   let b = ship.pos.y - currentValue.pos.y;
-
-          //   let distance = Math.sqrt(a * a + b * b);
-
-          //   let destination = distance > d ? currentValue : previousValue;
-          //   d = distance;
-          //   return destination;
-          // });
-
-          let rando = stations[Math.floor(Math.random() * stations.length)];
-
-          ship.actions
-            .meet(rando, Math.floor(Math.random() * 100) + 50)
-            .delay(1000);
-        },
+        fcn: () => flyToRandomStation(ship, stations),
         repeats: true,
         interval: 1000,
       });
@@ -65,8 +49,6 @@ export class Game extends Engine {
       this.add(ship);
       this.add(timer);
       timer.start();
-
-      // ship.patrol(this);
     });
   }
 }

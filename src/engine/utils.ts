@@ -47,3 +47,24 @@ export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
  */
 export const isStation = (shape: Meeple): shape is Station =>
   shape instanceof Station;
+
+export function flyToRandomStation(ship: Ship, stations: Station[]) {
+  let rando = stations[Math.floor(Math.random() * stations.length)];
+
+  ship.actions.meet(rando, Math.floor(Math.random() * 100) + 50).delay(1000);
+}
+
+// let d = 0;
+// let station = stations.reduce(function (
+//   previousValue: Station,
+//   currentValue: Station
+// ) {
+//   let a = ship.pos.x - currentValue.pos.x;
+//   let b = ship.pos.y - currentValue.pos.y;
+
+//   let distance = Math.sqrt(a * a + b * b);
+
+//   let destination = distance > d ? currentValue : previousValue;
+//   d = distance;
+//   return destination;
+// });
