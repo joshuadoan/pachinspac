@@ -49,9 +49,11 @@ export const isStation = (shape: Meeple): shape is Station =>
   shape instanceof Station;
 
 export function flyToRandomStation(ship: Ship, stations: Station[]) {
+  if (!ship.actions.getQueue().isComplete()) return;
+  ship.actions.clearActions();
   let rando = stations[Math.floor(Math.random() * stations.length)];
 
-  ship.actions.meet(rando, Math.floor(Math.random() * 100) + 50).delay(1000);
+  ship.actions.meet(rando, Math.floor(Math.random() * 100) + 50).delay(10000);
 }
 
 // let d = 0;
