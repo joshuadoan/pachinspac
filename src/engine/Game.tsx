@@ -1,5 +1,5 @@
-import { Actor, Color, DisplayMode, Engine, vec } from "excalibur";
-import { arrayOfThings, getRandomScreenPosition, shuffle } from "./utils";
+import { Color, DisplayMode, Engine, Timer, vec } from "excalibur";
+import { arrayOfThings, getRandomScreenPosition, isMeeple } from "./utils";
 import { Ship } from "./Ship";
 import { Station } from "./Station";
 
@@ -12,16 +12,16 @@ export class Game extends Engine {
     });
   }
   initialize() {
-    const stations = arrayOfThings<Station>(10, () => new Station());
+    let stations = arrayOfThings<Station>(10, () => new Station());
 
     stations.forEach((station) => {
       station.pos = getRandomScreenPosition(this);
       this.add(station);
     });
 
-    [...Array(20)].forEach(() => {
-      const ship = new Ship();
+    let ships = arrayOfThings<Ship>(100, () => new Ship());
 
+    ships.forEach((ship) => {
       ship.pos = vec(
         Math.floor(Math.random() * this.drawWidth),
         Math.floor(Math.random() * this.drawHeight)
@@ -35,16 +35,38 @@ export class Game extends Engine {
       ];
 
       ship.color = colors[Math.floor(Math.random() * colors.length)];
+      let timer = new Timer({
+        fcn: () => {
+          let d = 0;
+          // let station = stations.reduce(function (
+          //   previousValue: Station,
+          //   currentValue: Station
+          // ) {
+          //   let a = ship.pos.x - currentValue.pos.x;
+          //   let b = ship.pos.y - currentValue.pos.y;
 
-      ship.actions.repeatForever(() => {
-        shuffle(stations).forEach((station) => {
+          //   let distance = Math.sqrt(a * a + b * b);
+
+          //   let destination = distance > d ? currentValue : previousValue;
+          //   d = distance;
+          //   return destination;
+          // });
+
+          let rando = stations[Math.floor(Math.random() * stations.length)];
+
           ship.actions
-            .meet(station, Math.floor(Math.random() * 100) + 10)
+            .meet(rando, Math.floor(Math.random() * 100) + 50)
             .delay(1000);
-        });
+        },
+        repeats: true,
+        interval: 1000,
       });
 
       this.add(ship);
+      this.add(timer);
+      timer.start();
+
+      // ship.patrol(this);
     });
   }
 }

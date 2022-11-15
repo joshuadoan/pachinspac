@@ -4,11 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>Vite + React + TS</title>
   </head>
-  <body class="h-screen flex flex-col overflow-hidden">
-    <div id="root" class="h-screen"></div>
+  <body
+    class="h-screen flex flex-col overflow-hidden"
+    style="
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    "
+  >
+    <div id="root" style="height: 100vh"></div>
     <canvas id="pepper" />
     <script type="module" src="/src/main.tsx"></script>
   </body>

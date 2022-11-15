@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
-import { Button, ButtonLink } from "./Button";
+import { Button } from "./Button";
+import { ChevronLeftIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
+
 import { Event, State } from "../types";
 
 function Header(props: { dispatch: (value: Event) => void; state: State }) {
-  let { id } = useParams();
-
   return (
     <header className="mb-4 flex gap-4">
       <Button

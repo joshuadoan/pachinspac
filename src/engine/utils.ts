@@ -1,5 +1,7 @@
 import { Actor, Engine, vec } from "excalibur";
 import { Meeple } from "./Meeple";
+import { Ship } from "./Ship";
+import { Station } from "./Station";
 
 /**
  * Shuffles array
@@ -30,7 +32,18 @@ export function arrayOfThings<Type>(number: number, expression: () => Type) {
 }
 
 /**
- * Type guard for converting Actors to our custom Actor called Meeple
+ * Type guard for converting Actors into our custom Actor called Meeple
  */
 export const isMeeple = (shape: Actor): shape is Meeple =>
   shape instanceof Meeple;
+
+/**
+ * Type guard for converting Meeple into a subclass
+ */
+export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
+
+/**
+ * Type guard for converting Meeple into a subclass
+ */
+export const isStation = (shape: Meeple): shape is Station =>
+  shape instanceof Station;

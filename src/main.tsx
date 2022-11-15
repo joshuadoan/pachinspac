@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { FpsView } from "react-fps";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
+    <FpsView left={"80%"} />
     <RouterProvider router={router} />
   </React.StrictMode>
 );

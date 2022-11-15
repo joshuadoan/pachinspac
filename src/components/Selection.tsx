@@ -10,9 +10,11 @@ function Selection(props: { selected: Meeple }) {
         back
       </ButtonLink>
 
-      <ButtonLink to={String(props.selected.id)} className="capitalize ">
+      <ButtonLink to={`/${String(props.selected.id)}`} className="capitalize ">
         {props.selected.icon}
         {props.selected.name}
+        <span>x: {Math.floor(props.selected.pos.x)}</span>
+        <span>y: {Math.floor(props.selected.pos.y)}</span>
       </ButtonLink>
     </div>
   );

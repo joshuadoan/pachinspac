@@ -1,5 +1,3 @@
-import { UserIcon } from "@heroicons/react/24/solid";
-import { Actor } from "excalibur";
 import { Meeple } from "../engine/Meeple";
 import { ButtonLink } from "./Button";
 
@@ -12,6 +10,8 @@ function ActorList(props: { actors: Meeple[] }) {
             <ButtonLink to={String(actor.id)} className="capitalize">
               {actor.icon}
               {actor.name}
+              <span>x: {Math.floor(actor.pos.x)}</span>
+              <span>y: {Math.floor(actor.pos.y)}</span>
             </ButtonLink>
           </li>
         );
