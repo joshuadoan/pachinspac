@@ -1,14 +1,12 @@
-import { PaperAirplaneIcon, WrenchIcon } from "@heroicons/react/24/solid";
-
 import ActorList from "./components/ActorList";
 import Selection from "./components/Selection";
 
 import Header from "./components/Header";
 import useGame from "./hooks/useGame";
 
+import { isShip, isStation } from "./utils";
+
 import "./App.css";
-import { Button } from "./components/Button";
-import { isShip, isStation } from "./engine/utils";
 
 function App() {
   const { state, dispatch, selected } = useGame();
@@ -16,7 +14,6 @@ function App() {
     if (state.filters.ships && isShip(m)) {
       return true;
     }
-
     if (state.filters.stations && isStation(m)) {
       return true;
     }

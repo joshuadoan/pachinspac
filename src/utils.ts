@@ -1,7 +1,7 @@
 import { Actor, Engine, vec } from "excalibur";
-import { Meeple } from "./Meeple";
-import { Ship } from "./Ship";
-import { Station } from "./Station";
+import { Meeple } from "./engine/Meeple";
+import { Ship } from "./engine/Ship";
+import { Station } from "./engine/Station";
 
 /**
  * Shuffles array
@@ -50,7 +50,6 @@ export const isStation = (shape: Meeple): shape is Station =>
 
 export function flyToRandomStation(ship: Ship, stations: Station[]) {
   if (!ship.actions.getQueue().isComplete()) return;
-  ship.actions.clearActions();
   let rando = stations[Math.floor(Math.random() * stations.length)];
 
   ship.actions.meet(rando, Math.floor(Math.random() * 100) + 50).delay(10000);

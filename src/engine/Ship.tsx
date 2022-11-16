@@ -3,9 +3,10 @@ import randomName from "@scaleway/random-name";
 import { Meeple } from "./Meeple";
 import { ReactNode } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { shuffle } from "./utils";
+import { shuffle } from "../utils/utils";
 import { Game } from "./Game";
 import { Station } from "./Station";
+import { MeepleColors } from "../consts";
 
 // sparkles
 export class Ship extends Meeple {
@@ -16,7 +17,7 @@ export class Ship extends Meeple {
       pos: vec(100, 100),
       width: 10,
       height: 10,
-      color: Color.Magenta,
+      color: MeepleColors[Math.floor(Math.random() * MeepleColors.length)],
       name: randomName("", " "),
     });
   }

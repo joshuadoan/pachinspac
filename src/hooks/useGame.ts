@@ -1,7 +1,15 @@
+import { Color, Timer } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Game } from "../engine/Game";
-import { isMeeple } from "../engine/utils";
+import { Ship } from "../engine/Ship";
+import { Station } from "../engine/Station";
+import {
+  arrayOfThings,
+  flyToRandomStation,
+  getRandomScreenPosition,
+  isMeeple,
+} from "../utils";
 import { Event, State } from "../types";
 
 let defaultState = {
@@ -25,13 +33,39 @@ function useGame() {
     return state.isPaused ? gameRef.current?.stop() : gameRef.current?.start();
   }
 
+  function init(game: Game) {
+    let stations = arrayOfThings<Station>(10, () => new Station());
+
+    stations.forEach((station) => {
+      station.pos = getRandomScreenPosition(game);
+      game.add(station);
+    });
+
+    let ships = arrayOfThings<Ship>(50, () => new Ship());
+
+    ships.forEach((ship) => {
+      if (!gameRef.current) return;
+      ship.pos = getRandomScreenPosition(gameRef.current);
+
+      gameRef.current.add(ship);
+
+      let timer = new Timer({
+        fcn: () => flyToRandomStation(ship, stations),
+        repeats: true,
+        interval: 1000,
+      });
+      gameRef.current.add(timer);
+      timer.start();
+    });
+  }
+
   useEffect(() => {
     gameRef.current = new Game();
-    gameRef.current.initialize();
+    init(gameRef.current);
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    let interval = setInterval(() => {
       let game = gameRef.current;
 
       dispatch({
