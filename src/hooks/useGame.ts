@@ -17,7 +17,7 @@ let defaultState = {
   actors: [],
   filters: {
     ships: true,
-    stations: true,
+    stations: false,
   },
 };
 
@@ -74,7 +74,7 @@ function useGame() {
           actors: game?.currentScene.actors.filter(isMeeple).map((a) => a),
         },
       });
-    }, 100);
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);

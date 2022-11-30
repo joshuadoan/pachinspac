@@ -31,6 +31,10 @@ export class Ship extends Meeple {
     // this.patrol();
   }
 
+  public setDestination(foo: any) {
+    this.destination = foo;
+  }
+
   public patrol(game: Game) {
     // this.actions.clearActions();
     // this.actions.repeatForever((ctx) => {
