@@ -17,7 +17,7 @@ let defaultState = {
   actors: [],
   filters: {
     ships: true,
-    stations: false,
+    stations: true,
   },
 };
 
@@ -41,16 +41,22 @@ function useGame() {
       game.add(station);
     });
 
-    let ships = arrayOfThings<Ship>(50, () => new Ship());
+    let ships = arrayOfThings<Ship>(10, () => new Ship());
+
+    //
+    // this.destination &&
+    // this.pos.x + this.pos.y ===
+    //   this.destination?.pos.x + this.destination?.pos.y;
 
     ships.forEach((ship) => {
       if (!gameRef.current) return;
       ship.pos = getRandomScreenPosition(gameRef.current);
-
       gameRef.current.add(ship);
 
       let timer = new Timer({
-        fcn: () => flyToRandomStation(ship, stations),
+        fcn: () => {
+          flyToRandomStation(ship, stations);
+        },
         repeats: true,
         interval: 1000,
       });
@@ -74,7 +80,7 @@ function useGame() {
           actors: game?.currentScene.actors.filter(isMeeple).map((a) => a),
         },
       });
-    }, 500);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

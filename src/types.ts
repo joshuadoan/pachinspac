@@ -1,12 +1,13 @@
 import { Meeple } from "./engine/Meeple";
 
-export type Filters = "ships" | "stations";
+export type Filter = "ships" | "stations";
+export type Filters = {
+  [key in Filter]?: boolean;
+};
 export type State = {
   isPaused: boolean;
   actors: Meeple[];
-  filters: {
-    [key in Filters]?: boolean;
-  };
+  filters: Filters;
 };
 
 export type Event = {
