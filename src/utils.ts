@@ -1,7 +1,8 @@
 import { Actor, Engine, vec } from "excalibur";
-import { Meeple } from "./Meeple";
-import { Ship } from "./Ship";
-import { Station } from "./Station";
+import { Meeple } from "./engine/Meeple";
+import { Ship } from "./engine/Ship";
+import { Station } from "./engine/Station";
+import { Filters } from "./types";
 
 /**
  * Shuffles array
@@ -48,25 +49,12 @@ export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
 export const isStation = (shape: Meeple): shape is Station =>
   shape instanceof Station;
 
-export function flyToRandomStation(ship: Ship, stations: Station[]) {
-  if (!ship.actions.getQueue().isComplete()) return;
-  ship.actions.clearActions();
-  let rando = stations[Math.floor(Math.random() * stations.length)];
-
-  ship.actions.meet(rando, Math.floor(Math.random() * 100) + 50).delay(10000);
+export function filterByState(filters: Filters, meeple: Meeple) {
+  if (filters.ships && isShip(meeple)) {
+    return true;
+  }
+  if (filters.stations && isStation(meeple)) {
+    return true;
+  }
+  return false;
 }
-
-// let d = 0;
-// let station = stations.reduce(function (
-//   previousValue: Station,
-//   currentValue: Station
-// ) {
-//   let a = ship.pos.x - currentValue.pos.x;
-//   let b = ship.pos.y - currentValue.pos.y;
-
-//   let distance = Math.sqrt(a * a + b * b);
-
-//   let destination = distance > d ? currentValue : previousValue;
-//   d = distance;
-//   return destination;
-// });
