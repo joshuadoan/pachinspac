@@ -125,6 +125,14 @@ function useGame() {
 
   useEffect(() => {
     async function start() {
+      if (!gameRef.current) return;
+      let center = vec(
+        (gameRef.current.drawWidth / 2) *
+          gameRef.current.currentScene.camera.zoom,
+        (gameRef.current.drawHeight / 2) *
+          gameRef.current.currentScene.camera.zoom
+      );
+      gameRef.current.currentScene.camera.strategy.camera.move(center, 0);
       await gameRef.current?.start();
     }
     state.isPaused ? gameRef.current?.stop() : start();
