@@ -19,7 +19,7 @@ let defaultState = {
   isPaused: true,
   actors: [],
   filters: {
-    ships: true,
+    ships: false,
     stations: true,
   },
 };
