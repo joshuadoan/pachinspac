@@ -1,4 +1,5 @@
 import {
+  ActionContext,
   Color,
   ImageSource,
   ParallaxComponent,
@@ -9,9 +10,9 @@ import {
 } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Game } from "../engine/Game";
-import { Ship } from "../engine/Ship";
-import { Station } from "../engine/Station";
+import { Game } from "../classes/Game";
+import { Ship } from "../classes/Ship";
+import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 
@@ -31,50 +32,38 @@ function useGame() {
 
   let meeples = gameRef.current?.currentScene.actors.filter(isMeeple);
   let selected = meeples?.find((a) => a.id === Number(id));
+  let stations = arrayOfThings<Station>(7, () => new Station());
+  let ships = arrayOfThings<Ship>(50, () => new Ship());
 
   function togglePaused() {
     return state.isPaused ? gameRef.current?.stop() : gameRef.current?.start();
   }
 
   function init(game: Game) {
-    let stations = arrayOfThings<Station>(10, () => new Station());
-
     stations.forEach((station) => {
       station.pos = getRandomScreenPosition(game);
-
       game.add(station);
     });
-
-    let ships = arrayOfThings<Ship>(100, () => new Ship());
 
     ships.forEach((ship) => {
       if (!gameRef.current) return;
       ship.pos = getRandomScreenPosition(gameRef.current);
       gameRef.current.add(ship);
-
-      ship.actions.repeatForever((actions) => {
-        let station = stations[Math.floor(Math.random() * stations.length)];
-        ship.destination = station;
-
-        actions
-          .meet(station, Math.floor(Math.random() * 100) + 50)
-          .callMethod(() => {
-            if (!ship.destination) {
-              return;
-            }
-            ship.destination.visitors[ship.id] = ship;
-            ship.graphics.visible = false;
-          })
-          .delay(Math.floor(Math.random() * 10000))
-          .callMethod(() => {
-            if (!ship.destination) {
-              return;
-            }
-            ship.destination.visitors[ship.id] = null;
-            ship.graphics.visible = true;
-          });
-      });
+      ship.actions.repeatForever(trade(stations, ship));
     });
+  }
+
+  function getCenterVec() {
+    if (!gameRef.current) return;
+
+    let center = vec(
+      (gameRef.current.drawWidth / 2) *
+        gameRef.current.currentScene.camera.zoom,
+      (gameRef.current.drawHeight / 2) *
+        gameRef.current.currentScene.camera.zoom
+    );
+
+    return center;
   }
 
   useEffect(() => {
@@ -143,6 +132,31 @@ function useGame() {
     selected,
     state,
     togglePaused,
+  };
+}
+
+function trade(stations: Station[], ship: Ship) {
+  return (actions: ActionContext) => {
+    let station = stations[Math.floor(Math.random() * stations.length)];
+    ship.destination = station;
+
+    actions
+      .meet(station, Math.floor(Math.random() * 100) + 50)
+      .callMethod(() => {
+        if (!ship.destination) {
+          return;
+        }
+        ship.destination.visitors[ship.id] = ship;
+        ship.graphics.visible = false;
+      })
+      .delay(Math.floor(Math.random() * 10000))
+      .callMethod(() => {
+        if (!ship.destination) {
+          return;
+        }
+        ship.destination.visitors[ship.id] = null;
+        ship.graphics.visible = true;
+      });
   };
 }
 

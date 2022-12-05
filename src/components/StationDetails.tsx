@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Station } from "../engine/Station";
+import { Station } from "../classes/Station";
 import { ButtonLink } from "./Button";
 import Icon from "./Icon";
 import { Pos } from "./Pos";

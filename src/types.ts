@@ -1,4 +1,4 @@
-import { Meeple } from "./engine/Meeple";
+import { Meeple } from "./classes/Meeple";
 
 export type Filter = "ships" | "stations";
 export type Filters = {

@@ -1,7 +1,7 @@
 import { Actor, Engine, vec } from "excalibur";
-import { Meeple } from "./engine/Meeple";
-import { Ship } from "./engine/Ship";
-import { Station } from "./engine/Station";
+import { Meeple } from "./classes/Meeple";
+import { Ship } from "./classes/Ship";
+import { Station } from "./classes/Station";
 import { Filters } from "./types";
 
 /**

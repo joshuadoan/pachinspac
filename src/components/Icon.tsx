@@ -4,7 +4,7 @@ import {
 } from "@heroicons/react/24/solid";
 import cx from "classnames";
 import { SVGProps } from "react";
-import { MeepleFlavor } from "../engine/Meeple";
+import { MeepleFlavor } from "../classes/Meeple";
 
 function Icon(props: { flavor: MeepleFlavor } & SVGProps<SVGSVGElement>) {
   const { flavor, ...rest } = props;

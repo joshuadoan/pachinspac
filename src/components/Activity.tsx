@@ -1,7 +1,7 @@
 import { BuildingStorefrontIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
-import { Ship } from "../engine/Ship";
-import { Station } from "../engine/Station";
+import { Ship } from "../classes/Ship";
+import { Station } from "../classes/Station";
 import { ButtonLink } from "./Button";
 import Icon from "./Icon";
 import Spinner from "./Spinner";

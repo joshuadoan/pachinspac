@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { Ship } from "../engine/Ship";
+import { Ship } from "../classes/Ship";
 import Icon from "./Icon";
 import { Activity } from "./Activity";
 import { Pos } from "./Pos";
