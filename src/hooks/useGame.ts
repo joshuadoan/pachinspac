@@ -63,6 +63,7 @@ function useGame() {
               return;
             }
             ship.destination.visitors[ship.id] = ship;
+            ship.graphics.visible = false;
           })
           .delay(Math.floor(Math.random() * 10000))
           .callMethod(() => {
@@ -70,6 +71,7 @@ function useGame() {
               return;
             }
             ship.destination.visitors[ship.id] = null;
+            ship.graphics.visible = true;
           });
       });
     });

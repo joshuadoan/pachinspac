@@ -26,7 +26,7 @@ export function StationDetails(props: { station: Station }) {
             {visitors.map(
               (ship) =>
                 ship && (
-                  <dd className="flex  items-center gap-2">
+                  <dd className="flex  items-center gap-2" key={ship.id}>
                     <Icon
                       flavor="Ship"
                       style={{

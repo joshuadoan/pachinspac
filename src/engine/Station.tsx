@@ -1,9 +1,8 @@
 import { Color, vec } from "excalibur";
 import randomName from "@scaleway/random-name";
-import { Meeple, MeepleFlavor } from "./Meeple";
+import { Meeple } from "./Meeple";
 
 export class Station extends Meeple {
-  public flavor: MeepleFlavor = "Ship";
   public visitors: {
     [key: string]: Meeple | null;
   } = {};

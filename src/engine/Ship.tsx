@@ -12,8 +12,8 @@ export class Ship extends Meeple {
   constructor() {
     super({
       pos: vec(100, 100),
-      width: 10,
-      height: 10,
+      width: 5,
+      height: 5,
       color: MeepleColors[Math.floor(Math.random() * MeepleColors.length)],
       name: randomName("", " "),
     });
