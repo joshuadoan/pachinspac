@@ -3,7 +3,7 @@ import randomName from "@scaleway/random-name";
 import { Meeple, MeepleFlavor } from "./Meeple";
 
 export class Station extends Meeple {
-  public type: MeepleFlavor = "Ship";
+  public flavor: MeepleFlavor = "Ship";
   public visitors: {
     [key: string]: Meeple | null;
   } = {};

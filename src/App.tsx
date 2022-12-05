@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import { Pos } from "./components/Pos";
 import useGame from "./hooks/useGame";
 
-import { filterByState, isShip } from "./utils";
+import { filterByState, isMeeple, isShip, isStation } from "./utils";
 
 import "./App.css";
 import { ShipDetails } from "./components/ShipDetails";
@@ -21,20 +21,20 @@ function App() {
       <Header dispatch={dispatch} state={state} />
       <main className="flex-1 overflow-hidden ">
         {selected ? (
-          <div className="flex flex-col gap-4 text-white">
+          <div className="flex flex-col gap-4 text-white p-4">
             <div className="py-4">
               {isShip(selected) ? (
                 <ShipDetails ship={selected} />
-              ) : (
-                <StationDetails selected={selected} />
-              )}
+              ) : isStation(selected) ? (
+                <StationDetails station={selected} />
+              ) : null}
             </div>
           </div>
         ) : (
-          <ul className="h-full overflow-auto space-y-6  max-w-md">
+          <ul className="h-full overflow-auto max-w-md space-y-2">
             {filtered.map((actor) => {
               return (
-                <li key={actor.id} className="">
+                <li key={actor.id}>
                   <ButtonLink to={String(actor.id)} className="capitalize">
                     <Icon
                       flavor={isShip(actor) ? "Ship" : "Station"}

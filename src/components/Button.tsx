@@ -5,8 +5,8 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
 }
 
 const buttonStyles =
-  "px-4 py-3 bg-black text-white bg-opacity-50 flex gap-4 items:center";
-const buttonHoverStyles = "hover:bg-opacity-10 hover:bg-white ";
+  " bg-black text-white bg-opacity-50 flex gap-4 items:center";
+const buttonHoverStyles = "hover:bg-opacity-10 hover:bg-white hover:underline ";
 
 export function Button(props: ButtonProps) {
   const { children, ...rest } = props;

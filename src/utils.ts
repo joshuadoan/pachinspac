@@ -49,26 +49,6 @@ export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
 export const isStation = (shape: Meeple): shape is Station =>
   shape instanceof Station;
 
-export function flyToRandomStation(ship: Ship, stations: Station[]) {
-  if (!ship.actions.getQueue().isComplete()) return;
-  let station = stations[Math.floor(Math.random() * stations.length)];
-  ship.destination = station;
-
-  ship.actions
-    .meet(station, Math.floor(Math.random() * 100) + 50)
-    .callMethod(() => {
-      if (!ship.destination) {
-        return;
-      }
-      console.log("Landed!");
-      ship.destination.visitors[ship.id] = ship;
-    })
-    .delay(10000)
-    .callMethod(() => {
-      console.log("Landed!");
-    });
-}
-
 export function filterByState(filters: Filters, meeple: Meeple) {
   if (filters.ships && isShip(meeple)) {
     return true;

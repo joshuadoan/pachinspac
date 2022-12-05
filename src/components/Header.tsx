@@ -20,7 +20,7 @@ function Header(props: { dispatch: (value: Event) => void; state: State }) {
           {props.state.isPaused ? "play" : "pause"}
         </Button>
       </div>
-      <div className="flex h-fit gap-4">
+      <div className="flex h-fit gap-4 text-white">
         <Button
           onClick={() =>
             props.dispatch({
