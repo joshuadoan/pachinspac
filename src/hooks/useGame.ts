@@ -37,7 +37,7 @@ function useGame() {
   }
 
   function init(game: Game) {
-    let stations = arrayOfThings<Station>(10, () => new Station());
+    let stations = arrayOfThings<Station>(5, () => new Station());
 
     stations.forEach((station) => {
       station.pos = getRandomScreenPosition(game);
@@ -45,7 +45,7 @@ function useGame() {
       game.add(station);
     });
 
-    let ships = arrayOfThings<Ship>(30, () => new Ship());
+    let ships = arrayOfThings<Ship>(20, () => new Ship());
 
     ships.forEach((ship) => {
       if (!gameRef.current) return;
