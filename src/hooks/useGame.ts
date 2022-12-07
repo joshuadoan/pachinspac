@@ -64,16 +64,6 @@ function useGame() {
     init(gameRef.current);
   }, []);
 
-  // useEffect(() => {
-  //   if (!gameRef.current) return;
-
-  //   if (selected) {
-  //     gameRef.current.currentScene.camera.zoomOverTime(2, 1000);
-  //   } else {
-  //     gameRef.current.currentScene.camera.zoomOverTime(MIN_ZOOM, 1000);
-  //   }
-  // }, [selected]);
-
   useEffect(() => {
     if (!gameRef.current) return;
 
@@ -112,8 +102,8 @@ function useGame() {
       gameRef.current.currentScene.camera.strategy.camera.move(center, 0);
       gameRef.current?.start();
     }
-    state.isPaused ? gameRef.current?.stop() : start();
-  }, [state.isPaused]);
+    start();
+  }, []);
 
   return {
     dispatch,
