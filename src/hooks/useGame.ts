@@ -6,23 +6,23 @@ import {
   SpriteSheet,
   TileMap,
   Timer,
-  vec,
-} from "excalibur";
-import { useEffect, useReducer, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { Game } from "../classes/Game";
-import { Ship } from "../classes/Ship";
-import { Station } from "../classes/Station";
-import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
-import { Event, State } from "../types";
+  vec
+} from 'excalibur';
+import { useEffect, useReducer, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { Game } from '../classes/Game';
+import { Ship } from '../classes/Ship';
+import { Station } from '../classes/Station';
+import { arrayOfThings, getRandomScreenPosition, isMeeple } from '../utils';
+import { Event, State } from '../types';
 
 let defaultState = {
   isPaused: true,
   actors: [],
   filters: {
-    ships: false,
-    stations: true,
-  },
+    ships: true,
+    stations: true
+  }
 };
 
 function useGame() {
@@ -31,21 +31,21 @@ function useGame() {
   let [state, dispatch] = useReducer(reducer, defaultState);
 
   let meeples = gameRef.current?.currentScene.actors.filter(isMeeple);
-  let selected = meeples?.find((a) => a.id === Number(id));
-  let stations = arrayOfThings<Station>(7, () => new Station());
-  let ships = arrayOfThings<Ship>(50, () => new Ship());
+  let selected = meeples?.find(a => a.id === Number(id));
+  let stations = arrayOfThings<Station>(5, () => new Station());
+  let ships = arrayOfThings<Ship>(25, () => new Ship());
 
   function togglePaused() {
     return state.isPaused ? gameRef.current?.stop() : gameRef.current?.start();
   }
 
   function init(game: Game) {
-    stations.forEach((station) => {
+    stations.forEach(station => {
       station.pos = getRandomScreenPosition(game);
       game.add(station);
     });
 
-    ships.forEach((ship) => {
+    ships.forEach(ship => {
       if (!gameRef.current) return;
       ship.pos = getRandomScreenPosition(gameRef.current);
       gameRef.current.add(ship);
@@ -102,10 +102,10 @@ function useGame() {
       let game = gameRef.current;
 
       dispatch({
-        type: "update-actors",
+        type: 'update-actors',
         payload: {
-          actors: game?.currentScene.actors.filter(isMeeple).map((a) => a),
-        },
+          actors: game?.currentScene.actors.filter(isMeeple).map(a => a)
+        }
       });
     }, 500);
 
@@ -131,7 +131,7 @@ function useGame() {
     dispatch,
     selected,
     state,
-    togglePaused,
+    togglePaused
   };
 }
 
@@ -163,24 +163,24 @@ function trade(stations: Station[], ship: Ship) {
 
 function reducer(state: State, event: Event) {
   switch (event.type) {
-    case "toggle-paused":
+    case 'toggle-paused':
       return {
         ...state,
-        isPaused: !state.isPaused,
+        isPaused: !state.isPaused
       };
-    case "update-actors": {
+    case 'update-actors': {
       return {
         ...state,
-        actors: event.payload?.actors ?? [],
+        actors: event.payload?.actors ?? []
       };
     }
-    case "update-filters": {
+    case 'update-filters': {
       return {
         ...state,
         filters: {
           ...state.filters,
-          ...event.payload?.filters,
-        },
+          ...event.payload?.filters
+        }
       };
     }
   }
