@@ -1,13 +1,4 @@
-import {
-  ActionContext,
-  Color,
-  ImageSource,
-  ParallaxComponent,
-  SpriteSheet,
-  TileMap,
-  Timer,
-  vec
-} from 'excalibur';
+import { ActionContext, vec } from 'excalibur';
 import { useEffect, useReducer, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Game } from '../classes/Game';
@@ -16,8 +7,11 @@ import { Station } from '../classes/Station';
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from '../utils';
 import { Event, State } from '../types';
 
+const MIN_ZOOM = 0.9;
+const MAX_ZOOM = 2;
+
 let defaultState = {
-  isPaused: true,
+  isPaused: false,
   actors: [],
   filters: {
     ships: true,
@@ -35,14 +29,13 @@ function useGame() {
   let stations = arrayOfThings<Station>(5, () => new Station());
   let ships = arrayOfThings<Ship>(25, () => new Ship());
 
-  function togglePaused() {
-    return state.isPaused ? gameRef.current?.stop() : gameRef.current?.start();
+  function togglePaused(state: State, game: Game) {
+    return state.isPaused ? game.stop() : game.start();
   }
 
   function init(game: Game) {
     stations.forEach(station => {
       station.pos = getRandomScreenPosition(game);
-      game.add(station);
     });
 
     ships.forEach(ship => {
@@ -51,16 +44,16 @@ function useGame() {
       gameRef.current.add(ship);
       ship.actions.repeatForever(trade(stations, ship));
     });
+
+    stations.forEach(station => {
+      game.add(station);
+    });
   }
 
-  function getCenterVec() {
-    if (!gameRef.current) return;
-
+  function getCenterVec(game: Game) {
     let center = vec(
-      (gameRef.current.drawWidth / 2) *
-        gameRef.current.currentScene.camera.zoom,
-      (gameRef.current.drawHeight / 2) *
-        gameRef.current.currentScene.camera.zoom
+      (game.drawWidth / 2) * game.currentScene.camera.zoom,
+      (game.drawHeight / 2) * game.currentScene.camera.zoom
     );
 
     return center;
@@ -76,24 +69,16 @@ function useGame() {
 
     if (selected) {
       gameRef.current.currentScene.camera.zoomOverTime(2, 1000);
-
       gameRef.current.currentScene.camera.strategy.elasticToActor(
         selected,
         0.3,
         0.3
       );
     } else {
-      let center = vec(
-        (gameRef.current.drawWidth / 2) *
-          gameRef.current.currentScene.camera.zoom,
-        (gameRef.current.drawHeight / 2) *
-          gameRef.current.currentScene.camera.zoom
-      );
+      let center = getCenterVec(gameRef.current);
       gameRef.current.currentScene.camera.clearAllStrategies();
-      gameRef.current.currentScene.camera.zoomOverTime(1, 1000);
+      gameRef.current.currentScene.camera.zoomOverTime(MIN_ZOOM, 1000);
       gameRef.current.currentScene.camera.strategy.camera.move(center, 1000);
-
-      // gameRef.current.currentScene.camera.strategy.camera.pos = ;
     }
   }, [selected]);
 
@@ -113,16 +98,11 @@ function useGame() {
   }, []);
 
   useEffect(() => {
-    async function start() {
+    function start() {
       if (!gameRef.current) return;
-      let center = vec(
-        (gameRef.current.drawWidth / 2) *
-          gameRef.current.currentScene.camera.zoom,
-        (gameRef.current.drawHeight / 2) *
-          gameRef.current.currentScene.camera.zoom
-      );
+      let center = getCenterVec(gameRef.current);
       gameRef.current.currentScene.camera.strategy.camera.move(center, 0);
-      await gameRef.current?.start();
+      gameRef.current?.start();
     }
     state.isPaused ? gameRef.current?.stop() : start();
   }, [state.isPaused]);
@@ -148,7 +128,6 @@ function trade(stations: Station[], ship: Ship) {
           return;
         }
         ship.destination.visitors[ship.id] = ship;
-        ship.graphics.visible = false;
       })
       .delay(Math.floor(Math.random() * 50000))
       .callMethod(() => {
@@ -156,7 +135,6 @@ function trade(stations: Station[], ship: Ship) {
           return;
         }
         ship.destination.visitors[ship.id] = null;
-        ship.graphics.visible = true;
       });
   };
 }
