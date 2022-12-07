@@ -8,7 +8,7 @@ function Header(props: { dispatch: (value: Event) => void; state: State }) {
   return (
     <header className="mb-4 flex gap-4 items-center ">
       <ButtonLink to="/">Home</ButtonLink>
-      <Button
+      {/* <Button
         onClick={() =>
           props.dispatch({
             type: "toggle-paused",
@@ -17,7 +17,7 @@ function Header(props: { dispatch: (value: Event) => void; state: State }) {
         className="capitalize"
       >
         {props.state.isPaused ? "play" : "pause"}
-      </Button>
+      </Button> */}
 
       <Button
         onClick={() =>

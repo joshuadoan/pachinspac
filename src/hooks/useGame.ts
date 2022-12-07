@@ -27,7 +27,7 @@ function useGame() {
   let meeples = gameRef.current?.currentScene.actors.filter(isMeeple);
   let selected = meeples?.find(a => a.id === Number(id));
   let stations = arrayOfThings<Station>(5, () => new Station());
-  let ships = arrayOfThings<Ship>(25, () => new Ship());
+  let ships = arrayOfThings<Ship>(15, () => new Ship());
 
   function togglePaused(state: State, game: Game) {
     return state.isPaused ? game.stop() : game.start();
@@ -64,15 +64,15 @@ function useGame() {
     init(gameRef.current);
   }, []);
 
-  useEffect(() => {
-    if (!gameRef.current) return;
+  // useEffect(() => {
+  //   if (!gameRef.current) return;
 
-    if (selected) {
-      gameRef.current.currentScene.camera.zoomOverTime(2, 1000);
-    } else {
-      gameRef.current.currentScene.camera.zoomOverTime(MIN_ZOOM, 1000);
-    }
-  }, [selected]);
+  //   if (selected) {
+  //     gameRef.current.currentScene.camera.zoomOverTime(2, 1000);
+  //   } else {
+  //     gameRef.current.currentScene.camera.zoomOverTime(MIN_ZOOM, 1000);
+  //   }
+  // }, [selected]);
 
   useEffect(() => {
     if (!gameRef.current) return;
