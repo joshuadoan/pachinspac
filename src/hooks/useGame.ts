@@ -69,6 +69,15 @@ function useGame() {
 
     if (selected) {
       gameRef.current.currentScene.camera.zoomOverTime(2, 1000);
+    } else {
+      gameRef.current.currentScene.camera.zoomOverTime(MIN_ZOOM, 1000);
+    }
+  }, [selected]);
+
+  useEffect(() => {
+    if (!gameRef.current) return;
+
+    if (selected) {
       gameRef.current.currentScene.camera.strategy.elasticToActor(
         selected,
         0.3,
@@ -77,7 +86,6 @@ function useGame() {
     } else {
       let center = getCenterVec(gameRef.current);
       gameRef.current.currentScene.camera.clearAllStrategies();
-      gameRef.current.currentScene.camera.zoomOverTime(MIN_ZOOM, 1000);
       gameRef.current.currentScene.camera.strategy.camera.move(center, 1000);
     }
   }, [selected]);
