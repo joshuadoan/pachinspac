@@ -9,9 +9,10 @@ import { ShipDetails } from "./components/ShipDetails";
 import { StationDetails } from "./components/StationDetails";
 import { ButtonLink } from "./components/Button";
 import Icon from "./components/Icon";
+import { Activity } from "./components/Activity";
 
 function App() {
-  const { state, dispatch, selected } = useGame();
+  const { state, dispatch } = useGame();
   let filtered = state.actors?.filter((meeple) =>
     filterByState(state.filters, meeple)
   );
@@ -20,13 +21,13 @@ function App() {
     <div className="absolute h-screen overflow-hidden flex flex-col p-4 font-mono w-full">
       <Header dispatch={dispatch} state={state} />
       <main className="flex-1 overflow-hidden ">
-        {selected ? (
+        {state.selected ? (
           <div className="flex flex-col gap-4 text-white p-4">
             <div className="py-4">
-              {isShip(selected) ? (
-                <ShipDetails ship={selected} />
-              ) : isStation(selected) ? (
-                <StationDetails station={selected} />
+              {isShip(state.selected) ? (
+                <ShipDetails ship={state.selected} />
+              ) : isStation(state.selected) ? (
+                <StationDetails station={state.selected} />
               ) : null}
             </div>
           </div>

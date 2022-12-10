@@ -5,7 +5,6 @@ import { Activity } from "./Activity";
 import { Pos } from "./Pos";
 import { ButtonLink } from "./Button";
 
-//  public icon: ReactNode = (<PaperAirplaneIcon className="h-6 w-6" />);
 export function ShipDetails(props: { ship: Ship }) {
   const { ship } = props;
   return (
