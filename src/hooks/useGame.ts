@@ -10,7 +10,7 @@ import { Meeple } from "../classes/Meeple";
 
 const MIN_ZOOM = 0.9;
 const MAX_ZOOM = 2;
-const NUM_SHIPS = 50;
+const NUM_SHIPS = 30;
 const NUM_STATIONS = 5;
 
 let defaultState = {
