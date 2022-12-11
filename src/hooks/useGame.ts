@@ -1,4 +1,4 @@
-import { ActionContext, vec } from "excalibur";
+import { ActionContext, Loader, Resource, vec } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
@@ -6,6 +6,7 @@ import { Ship } from "../classes/Ship";
 import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
+import { Meeple } from "../classes/Meeple";
 
 const MIN_ZOOM = 0.9;
 const MAX_ZOOM = 2;
@@ -41,12 +42,12 @@ function useGame() {
   function initCamera(game: Game) {
     let center = getCenterVec(game);
     game.currentScene.camera.strategy.camera.move(center, 0);
-    game.currentScene.camera.strategy.camera.zoomOverTime(MIN_ZOOM, 1000);
+    game.currentScene.camera.strategy.camera.zoom = MIN_ZOOM;
   }
 
   function initActors(game: Game) {
-    let stations = arrayOfThings<Station>(5, initStation());
-    let ships = arrayOfThings<Ship>(15, initShip(game));
+    let stations = arrayOfThings<Station>(10, initStation());
+    let ships = arrayOfThings<Ship>(30, initShip(game));
 
     ships.forEach((ship) => {
       game.add(ship);
@@ -85,12 +86,11 @@ function useGame() {
         0.3,
         0.3
       );
-      // gameRef.current.currentScene.camera.strategy.camera.zoomOverTime(2, 5000);
-      console.log("ZOOM");
       gameRef.current.currentScene.camera.strategy.camera.zoomOverTime(
         MAX_ZOOM,
         1000
       );
+      gameRef.current.selected = selected;
     } else {
       let center = getCenterVec(gameRef.current);
       gameRef.current.currentScene.camera.clearAllStrategies();
@@ -99,14 +99,20 @@ function useGame() {
         MIN_ZOOM,
         1000
       );
+      gameRef.current.selected = null;
     }
   }, [id]);
 
   useEffect(() => {
-    console.log("*******");
     gameRef.current = new Game();
     initActors(gameRef.current);
     initCamera(gameRef.current);
+    const text = new Resource<string>("pepper", "text");
+
+    const loader = new Loader([
+      /* add Loadables here */
+      text,
+    ]);
     gameRef.current?.start();
   }, []);
 
@@ -117,10 +123,10 @@ function useGame() {
       dispatch({
         type: "update-actors",
         payload: {
-          actors: game?.currentScene.actors.filter(isMeeple).map((a) => a),
+          actors: game?.currentScene.actors as Meeple[],
         },
       });
-    }, 500);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -142,7 +148,7 @@ function initShip(game: Game): () => Ship {
 
 export function trade(stations: Station[], ship: Ship) {
   return (actions: ActionContext) => {
-    if (!actions.getQueue().isComplete) return;
+    if (!actions.getQueue().isComplete()) return;
     let station = stations[Math.floor(Math.random() * stations.length)];
     ship.destination = station;
 
