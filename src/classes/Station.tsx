@@ -20,38 +20,17 @@ export class Station extends Meeple {
 
   onInitialize(game: Game): void {
     const label = new Label({
+      name: "name",
       text: this.name,
-      pos: vec(15, this.height / 2),
+      pos: vec(this.width + 10, 3),
       font: new Font({
-        family: "impact",
-        size: 16,
-        unit: FontUnit.Px,
+        family: "verdana",
+        size: 1,
+        unit: FontUnit.Rem,
         color: Color.Orange,
       }),
     });
 
     this.addChild(label);
   }
-
-  onPostUpdate(engine: Game): void {
-    // if (engine.selected) {
-    //   let text = new Text({
-    //     text: this.name,
-    //     font: new Font({ size: 16 }),
-    //     color: this.color,
-    //   });
-    //   this.graphics.use(text);
-    // } else {
-    //   this.graphics.u
-    // }
-  }
-
-  // onInitialize() {
-  //   let text = new Text({
-  //     text: this.name,
-  //     font: new Font({ size: 16 }),
-  //     color: this.color,
-  //   });
-  //   this.graphics.use(text);
-  // }
 }
