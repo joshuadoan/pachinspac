@@ -70,16 +70,21 @@ function App() {
                   )}
                   {isShip(actor) && <span>{actor.status}</span>}
                   {isStation(actor) &&
-                    Object.values(actor.visitors).map((ship) => (
-                      <ButtonLink to={"/" + ship?.id} key={"icon-" + ship?.id}>
-                        <Icon
-                          flavor="Ship"
-                          style={{
-                            color: String(ship?.color),
-                          }}
-                        />
-                      </ButtonLink>
-                    ))}
+                    Object.values(actor.visitors)
+                      .filter((v) => !!v)
+                      .map((ship, i) => (
+                        <ButtonLink
+                          to={"/" + ship?.id}
+                          key={"icon-" + ship?.id + i}
+                        >
+                          <Icon
+                            flavor="Ship"
+                            style={{
+                              color: String(ship?.color),
+                            }}
+                          />
+                        </ButtonLink>
+                      ))}
                 </li>
               );
             })}

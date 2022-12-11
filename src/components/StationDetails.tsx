@@ -23,25 +23,27 @@ export function StationDetails(props: { station: Station }) {
         {visitors.length ? (
           <dl className="flex flex-col space-y-4">
             <dt>Visitors: </dt>
-            {visitors.map(
-              (ship) =>
-                ship && (
-                  <dd className="flex  items-center gap-2" key={ship.id}>
-                    <Icon
-                      flavor="Ship"
-                      style={{
-                        color: String(ship.color),
-                      }}
-                    />
-                    <ButtonLink
-                      to={`/${String(ship.id)}`}
-                      className="capitalize"
-                    >
-                      {ship.name} - {ship.status}
-                    </ButtonLink>
-                  </dd>
-                )
-            )}
+            {visitors
+              .filter((v) => !!v)
+              .map(
+                (ship, i) =>
+                  ship && (
+                    <dd className="flex  items-center gap-2" key={ship.id + i}>
+                      <Icon
+                        flavor="Ship"
+                        style={{
+                          color: String(ship.color),
+                        }}
+                      />
+                      <ButtonLink
+                        to={`/${String(ship.id)}`}
+                        className="capitalize"
+                      >
+                        {ship.name} - {ship.status}
+                      </ButtonLink>
+                    </dd>
+                  )
+              )}
           </dl>
         ) : null}
       </div>
