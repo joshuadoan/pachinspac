@@ -8,11 +8,15 @@ import { SVGProps } from "react";
 import { MeepleFlavor } from "../classes/Meeple";
 
 function Icon(props: { flavor: MeepleFlavor } & SVGProps<SVGSVGElement>) {
-  const { flavor, ...rest } = props;
+  const { flavor, className, ...rest } = props;
   return {
-    Meeple: <PaperAirplaneIcon className={cx(`h-6 w-6`)} {...rest} />,
-    Ship: <RocketLaunchIcon className={cx(`h-6 w-6`)} {...rest} />,
-    Station: <BuildingStorefrontIcon className="h-6 w-6" {...rest} />,
+    Meeple: (
+      <PaperAirplaneIcon className={cx(`h-6 w-6`, className)} {...rest} />
+    ),
+    Ship: <RocketLaunchIcon className={cx(`h-6 w-6`, className)} {...rest} />,
+    Station: (
+      <BuildingStorefrontIcon className={cx(`h-6 w-6`, className)} {...rest} />
+    ),
   }[props.flavor];
 }
 export default Icon;

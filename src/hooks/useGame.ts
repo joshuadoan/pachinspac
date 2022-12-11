@@ -159,6 +159,7 @@ export function trade(stations: Station[], ship: Ship) {
         if (!ship.destination) {
           return;
         }
+        ship.visiting = station;
         ship.destination.visitors[ship.id] = ship;
       })
       .delay(Math.floor(Math.random() * 50000))
@@ -166,6 +167,7 @@ export function trade(stations: Station[], ship: Ship) {
         if (!ship.destination) {
           return;
         }
+        ship.visiting = null;
         ship.destination.visitors[ship.id] = null;
       });
   };

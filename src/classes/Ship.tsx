@@ -7,6 +7,7 @@ import { MeepleColors } from "../consts";
 // sparkles
 export class Ship extends Meeple {
   public destination: Station | null = null;
+  public visiting: Station | null = null;
 
   constructor() {
     super({

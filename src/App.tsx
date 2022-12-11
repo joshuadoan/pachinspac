@@ -55,8 +55,17 @@ function App() {
                   <ButtonLink to={String(actor.id)} className="capitalize">
                     {actor.name}
                   </ButtonLink>
-                  <Pos pos={actor.pos} />
-                  {actor.id === state.selected?.id && <p>knkn</p>}
+
+                  {isShip(actor) && actor.visiting ? (
+                    <Icon
+                      flavor="Station"
+                      style={{
+                        color: String(actor.visiting.color),
+                      }}
+                    />
+                  ) : (
+                    <Pos pos={actor.pos} />
+                  )}
                 </li>
               );
             })}
