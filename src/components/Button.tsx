@@ -4,8 +4,7 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
   specialProp?: string;
 }
 
-const buttonStyles =
-  " bg-black text-white bg-opacity-50 flex gap-4 items:center";
+const buttonStyles = "text-white  flex gap-4 items:center";
 const buttonHoverStyles = "hover:bg-opacity-10 hover:bg-white hover:underline ";
 
 export function Button(props: ButtonProps) {

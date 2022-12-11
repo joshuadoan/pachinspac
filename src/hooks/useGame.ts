@@ -38,6 +38,9 @@ function useGame() {
       let station = new Station();
       if (!gameRef.current) return station;
       station.pos = getRandomScreenPosition(gameRef.current);
+      station.on("pointerdown", (e) => {
+        console.log("____");
+      });
       return station;
     };
   }

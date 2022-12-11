@@ -32,5 +32,9 @@ export class Station extends Meeple {
     });
 
     this.addChild(label);
+
+    label.on("pointerdown", (e) => {
+      console.log("____");
+    });
   }
 }

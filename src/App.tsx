@@ -19,12 +19,11 @@ function App() {
   );
 
   return (
-    <div className="absolute h-screen overflow-hidden flex flex-col p-6 font-mono w-full text-white">
+    <div className="p-4">
       <Header dispatch={dispatch} state={state} />
-
       <main
         className={classNames(
-          "p-2 w-fit flex-1 overflow-hidden transform top-0 left-0 bg-white bg-opacity-5  ease-in-out transition-all duration-300",
+          "p-2 fixed w-fit flex-1 h-screen transform top-16 left-4   ease-in-out transition-all duration-300 bg-sky-500 bg-opacity-10 max-w-lg",
           {
             "translate-x-0 ": state.sidebarIsOpen,
             "-translate-x-full": !state.sidebarIsOpen,
@@ -44,7 +43,7 @@ function App() {
           <ul className="h-full overflow-auto  space-y-4">
             {filtered.map((actor) => {
               return (
-                <li key={actor.id} className="flex gap-2 flex-wrap">
+                <li key={actor.id} className="flex gap-2">
                   <Icon
                     flavor={isShip(actor) ? "Ship" : "Station"}
                     className="h-6 w-6"
@@ -52,39 +51,45 @@ function App() {
                       color: String(actor.color),
                     }}
                   />
-                  <ButtonLink to={String(actor.id)} className="capitalize">
-                    {actor.name}
-                  </ButtonLink>
-
-                  {isShip(actor) && actor.visiting ? (
-                    <ButtonLink to={"/" + actor.visiting.id}>
-                      <Icon
-                        flavor="Station"
-                        style={{
-                          color: String(actor.visiting.color),
-                        }}
-                      />
-                    </ButtonLink>
-                  ) : (
-                    <Pos pos={actor.pos} />
-                  )}
-                  {isShip(actor) && <span>{actor.status}</span>}
-                  {isStation(actor) &&
-                    Object.values(actor.visitors)
-                      .filter((v) => !!v)
-                      .map((ship, i) => (
-                        <ButtonLink
-                          to={"/" + ship?.id}
-                          key={"icon-" + ship?.id + i}
-                        >
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2 items-center">
+                      <ButtonLink to={String(actor.id)} className="capitalize">
+                        {actor.name}
+                      </ButtonLink>
+                      {isShip(actor) && actor.visiting ? (
+                        <ButtonLink to={"/" + actor.visiting.id}>
                           <Icon
-                            flavor="Ship"
+                            flavor="Station"
                             style={{
-                              color: String(ship?.color),
+                              color: String(actor.visiting.color),
                             }}
                           />
                         </ButtonLink>
-                      ))}
+                      ) : (
+                        <Pos pos={actor.pos} />
+                      )}
+                      {isShip(actor) && <span>{actor.status}</span>}
+                    </div>
+                    {isStation(actor) && (
+                      <div className="flex gap-2">
+                        {Object.values(actor.visitors)
+                          .filter((v) => !!v)
+                          .map((ship, i) => (
+                            <ButtonLink
+                              to={"/" + ship?.id}
+                              key={"icon-" + ship?.id + i}
+                            >
+                              <Icon
+                                flavor="Ship"
+                                style={{
+                                  color: String(ship?.color),
+                                }}
+                              />
+                            </ButtonLink>
+                          ))}
+                      </div>
+                    )}
+                  </div>
                 </li>
               );
             })}
