@@ -10,6 +10,8 @@ import { Meeple } from "../classes/Meeple";
 
 const MIN_ZOOM = 0.9;
 const MAX_ZOOM = 2;
+const NUM_SHIPS = 50;
+const NUM_STATIONS = 5;
 
 let defaultState = {
   isPaused: false,
@@ -47,8 +49,8 @@ function useGame() {
   }
 
   function initActors(game: Game) {
-    let stations = arrayOfThings<Station>(10, initStation());
-    let ships = arrayOfThings<Ship>(30, initShip(game));
+    let stations = arrayOfThings<Station>(NUM_STATIONS, initStation());
+    let ships = arrayOfThings<Ship>(NUM_SHIPS, initShip(game));
 
     ships.forEach((ship) => {
       game.add(ship);
