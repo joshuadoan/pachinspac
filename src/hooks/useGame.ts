@@ -108,12 +108,6 @@ function useGame() {
     gameRef.current = new Game();
     initActors(gameRef.current);
     initCamera(gameRef.current);
-    const text = new Resource<string>("pepper", "text");
-
-    const loader = new Loader([
-      /* add Loadables here */
-      text,
-    ]);
     gameRef.current?.start();
   }, []);
 

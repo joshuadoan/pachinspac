@@ -11,7 +11,6 @@ import { ButtonLink } from "./components/Button";
 import Icon from "./components/Icon";
 import classNames from "classnames";
 import Filters from "./components/Filters";
-import { Link } from "react-router-dom";
 
 function App() {
   const { state, dispatch } = useGame();
@@ -25,7 +24,7 @@ function App() {
 
       <main
         className={classNames(
-          " flex-1 overflow-hidden transform top-0 left-0   ease-in-out transition-all duration-300 z-30",
+          "flex-1 overflow-hidden transform top-0 left-0   ease-in-out transition-all duration-300 z-30",
           {
             "translate-x-0": state.sidebarIsOpen,
             "-translate-x-full": !state.sidebarIsOpen,
