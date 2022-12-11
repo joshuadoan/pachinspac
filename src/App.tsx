@@ -25,7 +25,7 @@ function App() {
 
       <main
         className={classNames(
-          " flex-1 overflow-hidden transform top-0 left-0 max-w-xl  ease-in-out transition-all duration-300 z-30",
+          " flex-1 overflow-hidden transform top-0 left-0   ease-in-out transition-all duration-300 z-30",
           {
             "translate-x-0": state.sidebarIsOpen,
             "-translate-x-full": !state.sidebarIsOpen,
@@ -69,6 +69,17 @@ function App() {
                   ) : (
                     <Pos pos={actor.pos} />
                   )}
+                  {isShip(actor) && <span>{actor.status}</span>}
+                  {isStation(actor) &&
+                    Object.values(actor.visitors).map((ship) => (
+                      <Icon
+                        flavor="Ship"
+                        id={"icon-" + ship?.id}
+                        style={{
+                          color: String(ship?.color),
+                        }}
+                      />
+                    ))}
                 </li>
               );
             })}

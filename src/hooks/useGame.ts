@@ -152,6 +152,7 @@ export function trade(stations: Station[], ship: Ship) {
     if (!actions.getQueue().isComplete()) return;
     let station = stations[Math.floor(Math.random() * stations.length)];
     ship.destination = station;
+    ship.status = "Traveling";
 
     actions
       .meet(station, Math.floor(Math.random() * 100) + 50)
@@ -161,6 +162,11 @@ export function trade(stations: Station[], ship: Ship) {
         }
         ship.visiting = station;
         ship.destination.visitors[ship.id] = ship;
+        ship.status = "Parking";
+      })
+      .delay(Math.floor(Math.random() * 10000))
+      .callMethod(() => {
+        ship.status = "Trading";
       })
       .delay(Math.floor(Math.random() * 50000))
       .callMethod(() => {

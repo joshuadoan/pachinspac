@@ -19,7 +19,7 @@ export function Activity(props: { destination: Station | null; ship: Ship }) {
   if (props.destination?.visitors[props.ship.id]) {
     return (
       <div className="flex items-center gap-2">
-        <span>Hanging out at</span>
+        <span>{props.ship.status}</span>
         <Icon
           flavor="Station"
           style={{
