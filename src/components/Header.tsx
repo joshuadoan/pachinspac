@@ -1,58 +1,27 @@
-import cx from "classnames";
 import { Button, ButtonLink } from "./Button";
-import { PaperAirplaneIcon, WrenchIcon } from "@heroicons/react/24/solid";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import { Event, State } from "../types";
 
 function Header(props: { dispatch: (value: Event) => void; state: State }) {
   return (
-    <header className="mb-4 flex gap-4 items-center ">
-      <ButtonLink to="/">Home</ButtonLink>
-      {/* <Button
-        onClick={() =>
-          props.dispatch({
-            type: "toggle-paused",
-          })
-        }
-        className="capitalize"
-      >
-        {props.state.isPaused ? "play" : "pause"}
-      </Button> */}
-
+    <header className="mb-4 flex gap-4 items-center">
       <Button
         onClick={() =>
           props.dispatch({
-            type: "update-filters",
-            payload: {
-              filters: {
-                ships: !props.state.filters.ships,
-              },
-            },
+            type: "toggle-side-bar",
           })
         }
-        className={cx("flex items-center", {
-          "opacity-50": !props.state.filters.ships,
-        })}
       >
-        <PaperAirplaneIcon className="h-4 w-4" />
+        {props.state.sidebarIsOpen ? (
+          <EyeIcon className="h-6 w-6" />
+        ) : (
+          <EyeSlashIcon className="h-6 w-6" />
+        )}
       </Button>
-      <Button
-        onClick={() =>
-          props.dispatch({
-            type: "update-filters",
-            payload: {
-              filters: {
-                stations: !props.state.filters.stations,
-              },
-            },
-          })
-        }
-        className={cx("flex items-center", {
-          "opacity-50": !props.state.filters.stations,
-        })}
-      >
-        <WrenchIcon className="h-4 w-4" />
-      </Button>
+      {props.state.selected && (
+        <ButtonLink to="/">Back to all ships</ButtonLink>
+      )}
     </header>
   );
 }

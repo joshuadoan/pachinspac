@@ -19,6 +19,7 @@ let defaultState = {
     stations: true,
   },
   selected: null,
+  sidebarIsOpen: true,
 };
 
 function useGame() {
@@ -187,6 +188,12 @@ function reducer(state: State, event: Event) {
       return {
         ...state,
         selected: event.payload?.selected ?? null,
+      };
+    }
+    case "toggle-side-bar": {
+      return {
+        ...state,
+        sidebarIsOpen: !state.sidebarIsOpen,
       };
     }
     case "update-filters": {

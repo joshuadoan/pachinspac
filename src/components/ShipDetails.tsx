@@ -9,14 +9,14 @@ export function ShipDetails(props: { ship: Ship }) {
   const { ship } = props;
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-4 items-center">
         <Icon
           flavor="Ship"
           className={cx(`h-6 w-6`)}
           style={{
             color: String(ship.color),
           }}
-        />{" "}
+        />
         <ButtonLink to={`/${String(ship.id)}`} className="capitalize">
           {ship.name}
         </ButtonLink>

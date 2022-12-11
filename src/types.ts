@@ -9,9 +9,15 @@ export type State = {
   actors: Meeple[];
   filters: Filters;
   selected: Meeple | null;
+  sidebarIsOpen: boolean;
 };
 
 export type Event = {
-  type: "toggle-paused" | "update-actors" | "update-filters" | "set-selected";
+  type:
+    | "toggle-paused"
+    | "update-actors"
+    | "update-filters"
+    | "set-selected"
+    | "toggle-side-bar";
   payload?: Partial<State>;
 };
