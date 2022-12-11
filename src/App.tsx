@@ -24,9 +24,9 @@ function App() {
 
       <main
         className={classNames(
-          "flex-1 overflow-hidden transform top-0 left-0   ease-in-out transition-all duration-300 z-30",
+          "p-2 w-fit flex-1 overflow-hidden transform top-0 left-0 bg-white bg-opacity-5  ease-in-out transition-all duration-300",
           {
-            "translate-x-0": state.sidebarIsOpen,
+            "translate-x-0 ": state.sidebarIsOpen,
             "-translate-x-full": !state.sidebarIsOpen,
           }
         )}
@@ -44,7 +44,7 @@ function App() {
           <ul className="h-full overflow-auto  space-y-4">
             {filtered.map((actor) => {
               return (
-                <li key={actor.id} className="flex gap-2">
+                <li key={actor.id} className="flex gap-2 flex-wrap">
                   <Icon
                     flavor={isShip(actor) ? "Ship" : "Station"}
                     className="h-6 w-6"
