@@ -11,6 +11,7 @@ import { ButtonLink } from "./components/Button";
 import Icon from "./components/Icon";
 import classNames from "classnames";
 import Filters from "./components/Filters";
+import { Link } from "react-router-dom";
 
 function App() {
   const { state, dispatch } = useGame();
@@ -57,12 +58,14 @@ function App() {
                   </ButtonLink>
 
                   {isShip(actor) && actor.visiting ? (
-                    <Icon
-                      flavor="Station"
-                      style={{
-                        color: String(actor.visiting.color),
-                      }}
-                    />
+                    <ButtonLink to={"/" + actor.visiting.id}>
+                      <Icon
+                        flavor="Station"
+                        style={{
+                          color: String(actor.visiting.color),
+                        }}
+                      />
+                    </ButtonLink>
                   ) : (
                     <Pos pos={actor.pos} />
                   )}
