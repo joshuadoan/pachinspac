@@ -19,7 +19,7 @@ function App() {
   );
 
   return (
-    <div className="absolute h-screen overflow-hidden flex flex-col p-6 font-mono w-full">
+    <div className="absolute h-screen overflow-hidden flex flex-col p-6 font-mono w-full text-white">
       <Header dispatch={dispatch} state={state} />
 
       <main
@@ -44,18 +44,19 @@ function App() {
           <ul className="h-full overflow-auto  space-y-4">
             {filtered.map((actor) => {
               return (
-                <li key={actor.id}>
+                <li key={actor.id} className="flex gap-2">
+                  <Icon
+                    flavor={isShip(actor) ? "Ship" : "Station"}
+                    className="h-6 w-6"
+                    style={{
+                      color: String(actor.color),
+                    }}
+                  />
                   <ButtonLink to={String(actor.id)} className="capitalize">
-                    <Icon
-                      flavor={isShip(actor) ? "Ship" : "Station"}
-                      className="h-6 w-6"
-                      style={{
-                        color: String(actor.color),
-                      }}
-                    />
                     {actor.name}
-                    <Pos pos={actor.pos} />
                   </ButtonLink>
+                  <Pos pos={actor.pos} />
+                  {actor.id === state.selected?.id && <p>knkn</p>}
                 </li>
               );
             })}
