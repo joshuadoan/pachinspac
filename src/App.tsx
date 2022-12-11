@@ -71,13 +71,14 @@ function App() {
                   {isShip(actor) && <span>{actor.status}</span>}
                   {isStation(actor) &&
                     Object.values(actor.visitors).map((ship) => (
-                      <Icon
-                        flavor="Ship"
-                        id={"icon-" + ship?.id}
-                        style={{
-                          color: String(ship?.color),
-                        }}
-                      />
+                      <ButtonLink to={"/" + ship?.id} key={"icon-" + ship?.id}>
+                        <Icon
+                          flavor="Ship"
+                          style={{
+                            color: String(ship?.color),
+                          }}
+                        />
+                      </ButtonLink>
                     ))}
                 </li>
               );

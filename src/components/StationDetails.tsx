@@ -37,7 +37,7 @@ export function StationDetails(props: { station: Station }) {
                       to={`/${String(ship.id)}`}
                       className="capitalize"
                     >
-                      {ship.name}
+                      {ship.name} - {ship.status}
                     </ButtonLink>
                   </dd>
                 )

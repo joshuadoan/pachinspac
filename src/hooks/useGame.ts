@@ -164,6 +164,10 @@ export function trade(stations: Station[], ship: Ship) {
       })
       .delay(Math.floor(Math.random() * 50000))
       .callMethod(() => {
+        ship.status = "Thinking";
+      })
+      .delay(Math.floor(Math.random() * 10000))
+      .callMethod(() => {
         if (!ship.destination) {
           return;
         }
