@@ -5,7 +5,7 @@ import { Event, State } from "../types";
 
 function Header(props: { dispatch: (value: Event) => void; state: State }) {
   return (
-    <header className="p-4 flex gap-4 items-center">
+    <header className="p-4 flex gap-4 items-center fixed">
       <Button
         onClick={() =>
           props.dispatch({
@@ -19,9 +19,7 @@ function Header(props: { dispatch: (value: Event) => void; state: State }) {
           <EyeSlashIcon className="h-6 w-6" />
         )}
       </Button>
-      {props.state.selected && (
-        <ButtonLink to="/">Back to all ships</ButtonLink>
-      )}
+      {props.state.selected && <ButtonLink to="/">Zoom out</ButtonLink>}
     </header>
   );
 }

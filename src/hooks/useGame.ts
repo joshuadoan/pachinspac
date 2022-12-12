@@ -3,13 +3,11 @@ import {
   Color,
   Font,
   FontUnit,
-  Label,
-  Loader,
-  Resource,
   vec,
   Text,
   Actor,
   CollisionType,
+  BoundingBox,
 } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,7 +18,7 @@ import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
 
-const MIN_ZOOM = 0.9;
+const MIN_ZOOM = 1;
 const MAX_ZOOM = 2;
 const NUM_SHIPS = 30;
 const NUM_STATIONS = 5;
@@ -33,7 +31,7 @@ let defaultState = {
     stations: true,
   },
   selected: null,
-  sidebarIsOpen: true,
+  sidebarIsOpen: false,
 };
 
 function useGame() {
@@ -65,16 +63,11 @@ function useGame() {
       }),
     });
 
-    console.log("****", text.width);
-
     const actor = new Actor({
       pos: vec(0, -10),
       collisionType: CollisionType.Active,
       width: text.width,
       height: text.height,
-      // width: text.width,
-      // height: text.height,
-      // color: Color.Blue,
     });
 
     actor.graphics.use(text);
@@ -88,6 +81,14 @@ function useGame() {
   }
 
   function initCamera(game: Game) {
+    let boundingBox = new BoundingBox(
+      0,
+      0,
+      gameRef.current?.canvas.width,
+      gameRef.current?.canvas.height
+    );
+    // game.currentScene.camera.strategy.limitCameraBounds(boundingBox);
+
     let center = getCenterVec(game);
     game.currentScene.camera.strategy.camera.move(center, 0);
     game.currentScene.camera.strategy.camera.zoom = MIN_ZOOM;
@@ -158,7 +159,8 @@ function useGame() {
     gameRef.current = new Game();
     initActors(gameRef.current);
     initCamera(gameRef.current);
-    gameRef.current?.start();
+    gameRef.current.start();
+    console.log(gameRef.current.canvasWidth);
   }, []);
 
   useEffect(() => {

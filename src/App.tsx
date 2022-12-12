@@ -11,7 +11,7 @@ function App() {
     <div className=" bg-black text-white flex flex-col h-screen w-full">
       <Header dispatch={dispatch} state={state} />
       <main className="flex flex-1 overflow-hidden">
-        <SideBar dispatch={dispatch} state={state} />
+        {state.sidebarIsOpen && <SideBar dispatch={dispatch} state={state} />}
         <canvas id="pepper" />
       </main>
     </div>

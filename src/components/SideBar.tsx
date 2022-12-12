@@ -20,11 +20,7 @@ function SideBar(props: {
   return (
     <div
       className={classNames(
-        "p-4 transform ease-in-out transition-all duration-300 bg-blue-400 bg-opacity-10",
-        {
-          "translate-x-0": props.state.sidebarIsOpen,
-          "-translate-x-full": !state.sidebarIsOpen,
-        },
+        "p-4 duration-300 bg-blue-400 bg-opacity-10 absolute overflow-hidden top-12  bottom-0",
         props.className
       )}
       style={{

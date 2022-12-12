@@ -6,7 +6,7 @@ export class Game extends Engine {
 
   constructor() {
     super({
-      displayMode: DisplayMode.FillScreen,
+      displayMode: DisplayMode.FillContainer,
       backgroundColor: Color.Black,
       canvasElementId: "pepper",
     });
