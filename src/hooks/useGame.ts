@@ -157,7 +157,18 @@ function useGame() {
 
   useEffect(() => {
     gameRef.current = new Game();
-    initActors(gameRef.current);
+    let actors = window.localStorage.getItem("pachinspac");
+
+    if (actors && JSON.parse(actors).length) {
+      dispatch({
+        type: "update-actors",
+        payload: JSON.parse(actors),
+      });
+      JSON.parse(actors);
+    } else {
+      initActors(gameRef.current);
+    }
+
     initCamera(gameRef.current);
     gameRef.current.start();
     console.log(gameRef.current.canvasWidth);
@@ -174,6 +185,13 @@ function useGame() {
         },
       });
     }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    let interval = setInterval(() => {
+      window.localStorage.setItem("pachinspac", JSON.stringify(state.actors));
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
