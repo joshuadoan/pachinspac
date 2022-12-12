@@ -1,6 +1,17 @@
-import { ActionContext, Loader, Resource, vec } from "excalibur";
+import {
+  ActionContext,
+  Color,
+  Font,
+  FontUnit,
+  Label,
+  Loader,
+  Resource,
+  vec,
+  Text,
+  Actor,
+} from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
 import { Ship } from "../classes/Ship";
 import { Station } from "../classes/Station";
@@ -25,6 +36,7 @@ let defaultState = {
 };
 
 function useGame() {
+  let navigate = useNavigate();
   let { id } = useParams();
   let gameRef = useRef<Game | null>();
   let [state, dispatch] = useReducer(reducer, defaultState);
@@ -38,9 +50,6 @@ function useGame() {
       let station = new Station();
       if (!gameRef.current) return station;
       station.pos = getRandomScreenPosition(gameRef.current);
-      station.on("pointerdown", (e) => {
-        console.log("____");
-      });
       return station;
     };
   }
@@ -58,10 +67,41 @@ function useGame() {
     ships.forEach((ship) => {
       game.add(ship);
       ship.actions.repeatForever(trade(stations, ship));
+      ship.on("pointerdown", () => {
+        navigate("/" + ship.id);
+      });
     });
 
     stations.forEach((station) => {
       game.add(station);
+      station.on("pointerdown", () => {
+        navigate("/" + station.id);
+      });
+
+      var text = new Text({
+        text: station.name,
+
+        font: new Font({
+          family: "verdana",
+          size: 1,
+          unit: FontUnit.Rem,
+          color: Color.Orange,
+        }),
+      });
+
+      const actor = new Actor({
+        pos: vec(0, -10),
+        width: text.width,
+        height: text.height,
+      });
+
+      actor.graphics.use(text);
+
+      actor.on("pointerdown", () => {
+        navigate("/" + station.id);
+      });
+
+      station.addChild(actor);
     });
   }
 

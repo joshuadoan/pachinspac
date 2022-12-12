@@ -19,11 +19,11 @@ function App() {
   );
 
   return (
-    <div className="p-4">
+    <div className="p-4 text-white">
       <Header dispatch={dispatch} state={state} />
       <main
         className={classNames(
-          "p-2 fixed w-fit flex-1 h-screen transform top-16 left-4   ease-in-out transition-all duration-300 bg-sky-500 bg-opacity-10 max-w-lg",
+          "p-4 fixed w-fit flex-1 h-screen transform top-16 left-4 ease-in-out transition-all duration-300 bg-sky-500 bg-opacity-20 max-w-lg rounded-md m",
           {
             "translate-x-0 ": state.sidebarIsOpen,
             "-translate-x-full": !state.sidebarIsOpen,
@@ -56,7 +56,8 @@ function App() {
                       <ButtonLink to={String(actor.id)} className="capitalize">
                         {actor.name}
                       </ButtonLink>
-                      {isShip(actor) && actor.visiting ? (
+                      {isShip(actor) && <span>{actor.status}</span>}
+                      {isShip(actor) && actor.visiting && (
                         <ButtonLink to={"/" + actor.visiting.id}>
                           <Icon
                             flavor="Station"
@@ -65,10 +66,10 @@ function App() {
                             }}
                           />
                         </ButtonLink>
-                      ) : (
+                      )}
+                      {isShip(actor) && !actor.visiting && (
                         <Pos pos={actor.pos} />
                       )}
-                      {isShip(actor) && <span>{actor.status}</span>}
                     </div>
                     {isStation(actor) && (
                       <div className="flex gap-2">
