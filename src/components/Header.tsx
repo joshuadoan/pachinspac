@@ -5,7 +5,7 @@ import { Event, State } from "../types";
 
 function Header(props: { dispatch: (value: Event) => void; state: State }) {
   return (
-    <header className="mb-4 flex gap-4 items-center">
+    <header className="p-4 flex gap-4 items-center">
       <Button
         onClick={() =>
           props.dispatch({
