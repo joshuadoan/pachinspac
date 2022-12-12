@@ -9,6 +9,7 @@ import {
   vec,
   Text,
   Actor,
+  CollisionType,
 } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -45,13 +46,45 @@ function useGame() {
     return state.isPaused ? game.stop() : game.start();
   }
 
-  function initStation(): () => Station {
-    return () => {
-      let station = new Station();
-      if (!gameRef.current) return station;
-      station.pos = getRandomScreenPosition(gameRef.current);
-      return station;
-    };
+  function initStation(): Station {
+    let station = new Station();
+    if (!gameRef.current) return station;
+
+    station.pos = getRandomScreenPosition(gameRef.current);
+    station.on("pointerdown", () => {
+      navigate("/" + station.id);
+    });
+
+    var text = new Text({
+      text: station.name,
+      font: new Font({
+        family: "verdana",
+        size: 1,
+        unit: FontUnit.Rem,
+        color: Color.Orange,
+      }),
+    });
+
+    console.log("****", text.width);
+
+    const actor = new Actor({
+      pos: vec(0, -10),
+      collisionType: CollisionType.Active,
+      width: text.width,
+      height: text.height,
+      // width: text.width,
+      // height: text.height,
+      // color: Color.Blue,
+    });
+
+    actor.graphics.use(text);
+
+    actor.on("pointerdown", () => {
+      navigate("/" + station.id);
+    });
+
+    station.addChild(actor);
+    return station;
   }
 
   function initCamera(game: Game) {
@@ -61,8 +94,8 @@ function useGame() {
   }
 
   function initActors(game: Game) {
-    let stations = arrayOfThings<Station>(NUM_STATIONS, initStation());
-    let ships = arrayOfThings<Ship>(NUM_SHIPS, initShip(game));
+    let stations = arrayOfThings<Station>(NUM_STATIONS, initStation);
+    let ships = arrayOfThings<Ship>(NUM_SHIPS, () => initShip(game));
 
     ships.forEach((ship) => {
       game.add(ship);
@@ -74,34 +107,6 @@ function useGame() {
 
     stations.forEach((station) => {
       game.add(station);
-      station.on("pointerdown", () => {
-        navigate("/" + station.id);
-      });
-
-      var text = new Text({
-        text: station.name,
-
-        font: new Font({
-          family: "verdana",
-          size: 1,
-          unit: FontUnit.Rem,
-          color: Color.Orange,
-        }),
-      });
-
-      const actor = new Actor({
-        pos: vec(0, -10),
-        width: text.width,
-        height: text.height,
-      });
-
-      actor.graphics.use(text);
-
-      actor.on("pointerdown", () => {
-        navigate("/" + station.id);
-      });
-
-      station.addChild(actor);
     });
   }
 
@@ -178,12 +183,10 @@ function useGame() {
   };
 }
 
-function initShip(game: Game): () => Ship {
-  return () => {
-    let ship = new Ship();
-    ship.pos = getRandomScreenPosition(game);
-    return ship;
-  };
+function initShip(game: Game): Ship {
+  let ship = new Ship();
+  ship.pos = getRandomScreenPosition(game);
+  return ship;
 }
 
 export function trade(stations: Station[], ship: Ship) {
