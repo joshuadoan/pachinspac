@@ -55,6 +55,11 @@ function App() {
                       {state.selected.name}
                     </Link>
                   </li>
+                  <li>
+                    <span className="badge badge-lg ">
+                      {state.selected.status}
+                    </span>
+                  </li>
                 </ul>
               </div>
             )}
@@ -72,11 +77,11 @@ function App() {
             })
           }
         ></label>
-        <ul className="menu p-4 w-80 bg-base-100 text-base-content">
+        <ul className="menu p-4 w-80 bg-base-100 text-base-content space-y-1">
           {filtered.map((actor) => (
-            <li className="items-start flex">
+            <li className=" flex items-baseline">
               <Link
-                className="btn btn-ghost text-xl capitalize "
+                className="btn btn-ghost text-lg capitalize text-left"
                 to={`/${actor.id}`}
                 onClick={() =>
                   dispatch({
