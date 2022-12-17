@@ -60,6 +60,26 @@ function App() {
                       {state.selected.status}
                     </span>
                   </li>
+                  {state.selected.visiting && (
+                    <li>
+                      <Link
+                        className="btn btn-ghost normal-case text-xl"
+                        to={`/${state.selected.visiting.id}`}
+                      >
+                        {state.selected.visiting.name}
+                      </Link>
+                    </li>
+                  )}
+                  {state.selected.destination && !state.selected.visiting && (
+                    <li>
+                      <Link
+                        className="btn btn-ghost normal-case text-xl"
+                        to={`/${state.selected.destination.id}`}
+                      >
+                        {state.selected.destination.name}
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </div>
             )}
