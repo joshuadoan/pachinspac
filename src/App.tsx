@@ -97,20 +97,24 @@ function App() {
             })
           }
         ></label>
-        <ul className="menu p-4 w-80 bg-base-100 text-base-content space-y-1">
+        <ul className="p-4 w-80 bg-base-100 text-base-content space-y-1">
           {filtered.map((actor) => (
-            <li className=" flex items-baseline">
+            <li>
               <Link
                 className="btn btn-ghost text-lg capitalize text-left"
                 to={`/${actor.id}`}
-                onClick={() =>
-                  dispatch({
-                    type: "toggle-side-bar",
-                  })
-                }
               >
                 {actor.name}
               </Link>
+              {state.selected?.id === actor.id && (
+                <div className="stat py-2 px-4">
+                  <div className="stat-title">
+                    °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
+                  </div>
+                  <div className="stat-value">{actor.status}</div>
+                  <div className="stat-desc">{actor.destination?.name}</div>
+                </div>
+              )}
             </li>
           ))}
         </ul>
