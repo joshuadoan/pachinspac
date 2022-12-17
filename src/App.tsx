@@ -49,7 +49,7 @@ function App() {
                   </li>
                   <li>
                     <Link
-                      className="btn btn-ghost normal-case text-xl"
+                      className="btn btn-ghost uppercase text-xl"
                       to={`/${state.selected.id}`}
                     >
                       {state.selected.name}
@@ -63,7 +63,7 @@ function App() {
                   {state.selected.visiting && (
                     <li>
                       <Link
-                        className="btn btn-ghost normal-case text-xl"
+                        className="btn btn-ghost uppercase text-xl"
                         to={`/${state.selected.visiting.id}`}
                       >
                         {state.selected.visiting.name}
@@ -73,7 +73,7 @@ function App() {
                   {state.selected.destination && !state.selected.visiting && (
                     <li>
                       <Link
-                        className="btn btn-ghost normal-case text-xl"
+                        className="btn btn-ghost uppercase text-xl"
                         to={`/${state.selected.destination.id}`}
                       >
                         {state.selected.destination.name}
