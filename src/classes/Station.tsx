@@ -4,10 +4,6 @@ import { Meeple } from "./Meeple";
 import { Game } from "./Game";
 
 export class Station extends Meeple {
-  public visitors: {
-    [key: string]: Meeple | null;
-  } = {};
-
   constructor() {
     super({
       pos: vec(100, 100),

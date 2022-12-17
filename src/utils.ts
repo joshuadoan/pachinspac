@@ -49,7 +49,7 @@ export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
 export const isStation = (shape: Meeple): shape is Station =>
   shape instanceof Station;
 
-export function filterByState(filters: Filters, meeple: Meeple) {
+export function bySelectedFilters(filters: Filters, meeple: Meeple) {
   if (filters.ships && isShip(meeple)) {
     return true;
   }

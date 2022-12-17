@@ -1,5 +1,5 @@
 import { Pos } from "./Pos";
-import { filterByState, isShip, isStation } from "../utils";
+import { bySelectedFilters, isShip, isStation } from "../utils";
 import { ShipDetails } from "./ShipDetails";
 import { StationDetails } from "./StationDetails";
 import { ButtonLink } from "./Button";
@@ -15,7 +15,7 @@ function SideBar(props: {
 }) {
   const { dispatch, state } = props;
   let filtered = props.state.actors?.filter((meeple) =>
-    filterByState(state.filters, meeple)
+    bySelectedFilters(state.filters, meeple)
   );
   return (
     <div
