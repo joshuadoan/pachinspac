@@ -107,7 +107,7 @@ function App() {
                 {actor.name}
               </Link>
               {state.selected?.id === actor.id && (
-                <div className="stat py-2 px-4">
+                <div className="stat pb-2 px-4">
                   <div className="stat-title">
                     °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                   </div>
