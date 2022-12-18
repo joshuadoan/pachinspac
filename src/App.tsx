@@ -1,12 +1,23 @@
 import useGame from "./hooks/useGame";
 import "./App.css";
-import cx from "classnames";
 import { Link } from "react-router-dom";
 import { isShip, isStation } from "./utils";
+import {
+  BuildingStorefrontIcon,
+  RocketLaunchIcon,
+} from "@heroicons/react/24/outline";
+import { Meeple } from "./classes/Meeple";
 
 function App() {
   const { state, dispatch } = useGame();
   let filtered = state.actors?.filter(function (meeple) {
+    if (state.selected && meeple.id === state.selected.id) {
+      return true;
+    }
+
+    if (state.selected && meeple.id !== state.selected.id) {
+      return false;
+    }
     if (state.filters.ships && isShip(meeple)) {
       return true;
     }
@@ -45,42 +56,23 @@ function App() {
                 <ul>
                   <li>
                     <Link className="btn btn-ghost normal-case text-xl" to="/">
-                      Zoom out
+                      All
                     </Link>
                   </li>
-                  <li>
+                  <li className="gap-4">
                     <Link
                       className="btn btn-ghost uppercase text-xl"
                       to={`/${state.selected.id}`}
+                      onClick={() =>
+                        dispatch({
+                          type: "toggle-side-bar",
+                        })
+                      }
                     >
                       {state.selected.name}
                     </Link>
+                    <div className="badge">{state.selected.status}</div>
                   </li>
-                  <li>
-                    <span className="badge badge-lg ">
-                      {state.selected.status}
-                    </span>
-                  </li>
-                  {state.selected.visiting && (
-                    <li>
-                      <Link
-                        className="btn btn-ghost uppercase text-xl"
-                        to={`/${state.selected.visiting.id}`}
-                      >
-                        {state.selected.visiting.name}
-                      </Link>
-                    </li>
-                  )}
-                  {state.selected.destination && !state.selected.visiting && (
-                    <li>
-                      <Link
-                        className="btn btn-ghost uppercase text-xl"
-                        to={`/${state.selected.destination.id}`}
-                      >
-                        {state.selected.destination.name}
-                      </Link>
-                    </li>
-                  )}
                 </ul>
               </div>
             )}
@@ -97,29 +89,31 @@ function App() {
               type: "toggle-side-bar",
             })
           }
-        ></label>
-        <ul className="p-4 w-80 bg-base-100 text-base-content space-y-1">
+        />
+        <ul className="py-4 w-80 bg-base-100 text-base-content space-y-1">
           {filtered.map((actor) => (
-            <li
-              className={cx({
-                // " bg-red-900 bg-opacity-10": state.selected?.id === actor.id,
-              })}
-            >
+            <li>
+              {state.selected && (
+                <Link to="/" className="btn btn-link">
+                  Back
+                </Link>
+              )}
               <Link
-                className="btn btn-ghost text-lg capitalize text-left"
+                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start"
                 to={`/${actor.id}`}
               >
+                <Icon actor={actor} className="w-6 h-6 mr-4" />
                 {actor.name}
               </Link>
-              {state.selected?.id === actor.id && (
-                <div className="stat px-4 space-y-2">
-                  <div className="stat-title">{actor.destination?.name}</div>
-                  <div className="stat-value">
-                    °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}{" "}
+              {actor.id === state.selected?.id && (
+                <div className="stat bg-white bg-opacity-50 space-y-2">
+                  <div className="stat-title">
+                    loc °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                   </div>
-                  <div className="stat-desc">
-                    <span className="badge badge-lg ">{actor.status}</span>
-                  </div>
+                  <div className="stat-value">{actor.status}</div>
+                  {actor.destination && (
+                    <div className="stat-desc">{actor.destination?.name}</div>
+                  )}
                 </div>
               )}
             </li>
@@ -147,5 +141,23 @@ function HamburgerIcon() {
         d="M4 6h16M4 12h16M4 18h16"
       ></path>
     </svg>
+  );
+}
+
+function Icon(props: { actor: Meeple; className?: string }) {
+  return isShip(props.actor) ? (
+    <RocketLaunchIcon
+      style={{
+        color: props.actor.color.toString(),
+      }}
+      className={props.className}
+    />
+  ) : (
+    <BuildingStorefrontIcon
+      style={{
+        color: props.actor.color.toString(),
+      }}
+      className={props.className}
+    />
   );
 }

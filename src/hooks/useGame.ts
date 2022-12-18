@@ -226,7 +226,7 @@ export function trade(stations: Station[], ship: Ship) {
         ship.destination.visitors[ship.id] = ship;
         ship.status = "Parking";
       })
-      .delay(Math.floor(Math.random() * 10000))
+      .delay(Math.floor(Math.random() * 5000))
       .callMethod(() => {
         ship.status = "Trading";
       })
@@ -234,7 +234,7 @@ export function trade(stations: Station[], ship: Ship) {
       .callMethod(() => {
         ship.status = "Leaving";
       })
-      .delay(Math.floor(Math.random() * 10000))
+      .delay(Math.floor(Math.random() * 5000))
       .callMethod(() => {
         if (!ship.destination) {
           return;
