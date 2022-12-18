@@ -107,17 +107,35 @@ function App() {
                 {actor.name}
               </Link>
               {actor.id === state.selected?.id && (
-                <div className="stat bg-white bg-opacity-50 space-y-2">
-                  <div className="stat-title">
-                    loc °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
-                  </div>
-                  <div className="stat-value">{actor.attributes.status}</div>
-                  {actor.attributes.destination && (
-                    <div className="stat-desc">
-                      {actor.attributes.destination?.name}
+                <>
+                  <div className="stat bg-white bg-opacity-50 space-y-2 mb-4">
+                    <div className="stat-title">
+                      loc °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                     </div>
-                  )}
-                </div>
+                    <div className="stat-value">{actor.attributes.status}</div>
+                    {actor.attributes.destination && (
+                      <div className="stat-desc">
+                        <Link to={`/${actor.attributes.destination.id}`}>
+                          {actor.attributes.destination?.name}
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    {Object.values(actor.attributes.visitors).map(
+                      (actor) =>
+                        actor && (
+                          <Link
+                            className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-2"
+                            to={`/${actor.id}`}
+                          >
+                            <Icon actor={actor} className="w-6 h-6 mr-4" />
+                            {actor.name}
+                          </Link>
+                        )
+                    )}
+                  </div>
+                </>
               )}
             </li>
           ))}
