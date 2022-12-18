@@ -13,20 +13,4 @@ export class Station extends Meeple {
       name: randomName("The", " "),
     });
   }
-
-  onInitialize(game: Game): void {
-    const label = new Label({
-      name: "name",
-      text: this.name,
-      pos: vec(this.width + 10, 3),
-      font: new Font({
-        family: "verdana",
-        size: 1,
-        unit: FontUnit.Rem,
-        color: Color.Orange,
-      }),
-    });
-
-    // this.addChild(label);
-  }
 }

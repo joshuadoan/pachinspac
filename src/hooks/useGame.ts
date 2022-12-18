@@ -87,7 +87,7 @@ function useGame() {
       gameRef.current?.canvas.width,
       gameRef.current?.canvas.height
     );
-    // game.currentScene.camera.strategy.limitCameraBounds(boundingBox);
+    game.currentScene.camera.strategy.limitCameraBounds(boundingBox);
 
     let center = getCenterVec(game);
     game.currentScene.camera.strategy.camera.move(center, 0);
@@ -213,34 +213,24 @@ export function trade(stations: Station[], ship: Ship) {
   return (actions: ActionContext) => {
     if (!actions.getQueue().isComplete()) return;
     let station = stations[Math.floor(Math.random() * stations.length)];
-    ship.destination = station;
-    ship.status = "Traveling";
+    ship.attributes.destination = station;
+    ship.attributes.status = "Traveling";
 
     actions
       .meet(station, Math.floor(Math.random() * 100) + 50)
       .callMethod(() => {
-        if (!ship.destination) {
+        if (!ship.attributes.destination) {
           return;
         }
-        ship.visiting = station;
-        ship.destination.visitors[ship.id] = ship;
-        ship.status = "Parking";
+        ship.attributes.destination.attributes.visitors[ship.id] = ship;
+        ship.attributes.status = "Visiting";
       })
       .delay(Math.floor(Math.random() * 5000))
       .callMethod(() => {
-        ship.status = "Trading";
-      })
-      .delay(Math.floor(Math.random() * 50000))
-      .callMethod(() => {
-        ship.status = "Leaving";
-      })
-      .delay(Math.floor(Math.random() * 5000))
-      .callMethod(() => {
-        if (!ship.destination) {
+        if (!ship.attributes.destination) {
           return;
         }
-        ship.visiting = null;
-        ship.destination.visitors[ship.id] = null;
+        ship.attributes.destination.attributes.visitors[ship.id] = null;
       });
   };
 }

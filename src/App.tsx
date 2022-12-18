@@ -28,7 +28,7 @@ function App() {
   });
 
   return (
-    <div className="drawer ">
+    <div className="drawer">
       <input
         id="my-drawer"
         type="checkbox"
@@ -36,7 +36,7 @@ function App() {
         checked={state.sidebarIsOpen}
       />
       <div className="drawer-content">
-        <div className="navbar bg-base-100 fixed">
+        <div className="navbar bg-base-100 fixed z-10">
           <div className="flex-none">
             <label
               htmlFor="my-drawer"
@@ -71,7 +71,9 @@ function App() {
                     >
                       {state.selected.name}
                     </Link>
-                    <div className="badge">{state.selected.status}</div>
+                    <div className="badge">
+                      {state.selected.attributes.status}
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -110,9 +112,11 @@ function App() {
                   <div className="stat-title">
                     loc °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                   </div>
-                  <div className="stat-value">{actor.status}</div>
-                  {actor.destination && (
-                    <div className="stat-desc">{actor.destination?.name}</div>
+                  <div className="stat-value">{actor.attributes.status}</div>
+                  {actor.attributes.destination && (
+                    <div className="stat-desc">
+                      {actor.attributes.destination?.name}
+                    </div>
                   )}
                 </div>
               )}
