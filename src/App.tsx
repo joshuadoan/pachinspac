@@ -1,5 +1,6 @@
 import useGame from "./hooks/useGame";
 import "./App.css";
+import cx from "classnames";
 import { Link } from "react-router-dom";
 import { isShip, isStation } from "./utils";
 
@@ -99,7 +100,11 @@ function App() {
         ></label>
         <ul className="p-4 w-80 bg-base-100 text-base-content space-y-1">
           {filtered.map((actor) => (
-            <li>
+            <li
+              className={cx({
+                // " bg-red-900 bg-opacity-10": state.selected?.id === actor.id,
+              })}
+            >
               <Link
                 className="btn btn-ghost text-lg capitalize text-left"
                 to={`/${actor.id}`}
@@ -107,12 +112,14 @@ function App() {
                 {actor.name}
               </Link>
               {state.selected?.id === actor.id && (
-                <div className="stat pb-2 px-4">
-                  <div className="stat-title">
-                    °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
+                <div className="stat px-4 space-y-2">
+                  <div className="stat-title">{actor.destination?.name}</div>
+                  <div className="stat-value">
+                    °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}{" "}
                   </div>
-                  <div className="stat-value">{actor.status}</div>
-                  <div className="stat-desc">{actor.destination?.name}</div>
+                  <div className="stat-desc">
+                    <span className="badge badge-lg ">{actor.status}</span>
+                  </div>
                 </div>
               )}
             </li>
