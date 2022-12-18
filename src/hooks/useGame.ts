@@ -53,6 +53,11 @@ function useGame() {
       navigate("/" + station.id);
     });
 
+    station.attributes = {
+      ...station.attributes,
+      status: "Open",
+    };
+
     var text = new Text({
       text: station.name,
       font: new Font({

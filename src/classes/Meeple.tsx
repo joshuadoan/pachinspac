@@ -1,5 +1,4 @@
 import { Actor } from "excalibur";
-import { Station } from "./Station";
 
 export type ShipStatus = "Idle" | "Traveling" | "Visiting";
 export type StationStatus = "Closed" | "Open";

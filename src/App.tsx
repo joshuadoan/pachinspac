@@ -2,11 +2,9 @@ import useGame from "./hooks/useGame";
 import "./App.css";
 import { Link } from "react-router-dom";
 import { isShip, isStation } from "./utils";
-import {
-  BuildingStorefrontIcon,
-  RocketLaunchIcon,
-} from "@heroicons/react/24/outline";
 import { Meeple } from "./classes/Meeple";
+import { Color } from "excalibur";
+import Blockies from "react-blockies";
 
 function App() {
   const { state, dispatch } = useGame();
@@ -61,7 +59,7 @@ function App() {
                   </li>
                   <li className="gap-4">
                     <Link
-                      className="btn btn-ghost uppercase text-xl"
+                      className="btn btn-ghost uppercase text-xl flex gap-4"
                       to={`/${state.selected.id}`}
                       onClick={() =>
                         dispatch({
@@ -69,6 +67,7 @@ function App() {
                         })
                       }
                     >
+                      <Icon actor={state.selected} className="w-6 h-6 mr-4" />
                       {state.selected.name}
                     </Link>
                     <div className="badge">
@@ -101,7 +100,7 @@ function App() {
                 </Link>
               )}
               <Link
-                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start"
+                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-2"
                 to={`/${actor.id}`}
               >
                 <Icon actor={actor} className="w-6 h-6 mr-4" />
@@ -149,19 +148,33 @@ function HamburgerIcon() {
 }
 
 function Icon(props: { actor: Meeple; className?: string }) {
-  return isShip(props.actor) ? (
-    <RocketLaunchIcon
-      style={{
-        color: props.actor.color.toString(),
-      }}
-      className={props.className}
+  return (
+    <Avatar
+      color={props.actor.color}
+      name={props.actor.name}
+      className="mask mask-circle"
     />
-  ) : (
-    <BuildingStorefrontIcon
-      style={{
-        color: props.actor.color.toString(),
-      }}
-      className={props.className}
+  );
+}
+
+function Avatar({
+  size,
+  color,
+  name,
+  className,
+}: {
+  color: Color;
+  name: string;
+  size?: number;
+  seed?: string;
+  className?: string;
+}) {
+  return (
+    <Blockies
+      className={className}
+      seed={`${color.toString()}${name}`}
+      size={size || 8}
+      color={color.toRGBA()}
     />
   );
 }

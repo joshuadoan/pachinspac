@@ -1,7 +1,6 @@
 import { Color, vec, Text, Font, Engine, Label, FontUnit } from "excalibur";
 import randomName from "@scaleway/random-name";
 import { Meeple } from "./Meeple";
-import { Game } from "./Game";
 
 export class Station extends Meeple {
   constructor() {
