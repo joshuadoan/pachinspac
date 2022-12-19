@@ -1,6 +1,6 @@
 import { Actor } from "excalibur";
 
-export type ShipStatus = "Idle" | "Traveling" | "Visiting";
+export type ShipStatus = "Idle" | "Traveling" | "Visiting" | "Stranded";
 export type StationStatus = "Closed" | "Open";
 export type MeepleStatus = ShipStatus | StationStatus;
 
@@ -23,5 +23,6 @@ export class Meeple extends Actor {
     selected: false,
     status: "Idle",
     visitors: {},
+    chat: [],
   };
 }

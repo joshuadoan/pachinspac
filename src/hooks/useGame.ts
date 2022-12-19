@@ -1,5 +1,4 @@
 import {
-  ActionContext,
   Color,
   Font,
   FontUnit,
@@ -9,16 +8,7 @@ import {
   CollisionType,
   BoundingBox,
 } from "excalibur";
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  animals,
-  colors,
-  countries,
-  languages,
-  names,
-  starWars,
-} from "unique-names-generator";
+import { countries, starWars } from "unique-names-generator";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
@@ -27,6 +17,7 @@ import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
+import { trade } from "../trade";
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 2;
@@ -224,52 +215,6 @@ function initShip(game: Game): Ship {
   return ship;
 }
 
-export function trade(stations: Station[], ship: Ship) {
-  return (actions: ActionContext) => {
-    if (!actions.getQueue().isComplete()) return;
-    let station = stations[Math.floor(Math.random() * stations.length)];
-    ship.attributes.destination = station;
-    ship.attributes.status = "Traveling";
-
-    actions
-      .meet(station, Math.floor(Math.random() * 100) + 50)
-      .callMethod(() => {
-        if (!ship.attributes.destination) {
-          return;
-        }
-        ship.attributes.destination.attributes.visitors[ship.id] = ship;
-        ship.attributes.status = "Visiting";
-
-        let chat = uniqueNamesGenerator({
-          dictionaries: shuffle([
-            adjectives,
-            animals,
-            colors,
-            languages,
-            names,
-          ]),
-          separator: " ",
-          length: 5,
-          seed: ship?.id,
-          style: "lowerCase",
-        });
-
-        let punctuation = ["?", ".", "...", "!"][
-          Math.floor(Math.random() * ["?", ".", "...", "!"].length)
-        ];
-
-        ship.attributes.chat = [chat + punctuation];
-      })
-      .delay(Math.floor(Math.random() * 30000))
-      .callMethod(() => {
-        if (!ship.attributes.destination) {
-          return;
-        }
-        ship.attributes.destination.attributes.visitors[ship.id] = null;
-      });
-  };
-}
-
 function reducer(state: State, event: Event) {
   switch (event.type) {
     case "toggle-paused":
@@ -309,7 +254,7 @@ function reducer(state: State, event: Event) {
 
 export default useGame;
 
-function shuffle(array: any[]) {
+export function shuffle(array: any[]) {
   let currentIndex = array.length,
     randomIndex;
 

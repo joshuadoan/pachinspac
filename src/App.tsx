@@ -137,6 +137,9 @@ function App() {
                                 <Icon actor={actor} className="w-6 h-6 mr-4" />
                               </Link>
                             </div>
+                            <div className="chat-header capitalize">
+                              {actor.name}
+                            </div>
                             <div className="chat-bubble first-letter:capitalize">
                               {actor.attributes.chat.length &&
                                 actor.attributes.chat[0]}
