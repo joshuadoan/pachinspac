@@ -52,14 +52,14 @@ function App() {
               return false;
             })
             .map((actor) => (
-              <li key={actor.id} className="mb-8">
+              <li key={actor.id} className="">
                 {state.selected && (
                   <Link to="/" className="btn btn-link">
                     back
                   </Link>
                 )}
                 <Link
-                  className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left "
+                  className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left h-auto p-2"
                   to={`/${actor.id}`}
                 >
                   <Avatar
