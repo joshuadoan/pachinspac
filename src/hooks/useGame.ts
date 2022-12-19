@@ -7,6 +7,7 @@ import {
   Actor,
   CollisionType,
   BoundingBox,
+  Timer,
 } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,11 +17,12 @@ import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
-import { trade } from "../trade";
+import { taxi, trade } from "../behaviors/trade";
 
-const MIN_ZOOM = 0.5;
+const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 2;
 const NUM_SHIPS = 30;
+const NUM_TAXIS = 1;
 const NUM_STATIONS = 5;
 
 let defaultState = {
@@ -86,14 +88,6 @@ function useGame() {
   }
 
   function initCamera(game: Game) {
-    let boundingBox = new BoundingBox(
-      0,
-      0,
-      gameRef.current?.canvas.width,
-      gameRef.current?.canvas.height
-    );
-    game.currentScene.camera.strategy.limitCameraBounds(boundingBox);
-
     let center = getCenterVec(game);
     game.currentScene.camera.strategy.camera.move(center, 0);
     game.currentScene.camera.strategy.camera.zoom = MIN_ZOOM;
@@ -102,13 +96,17 @@ function useGame() {
   function initActors(game: Game) {
     let stations = arrayOfThings<Station>(NUM_STATIONS, initStation);
     let ships = arrayOfThings<Ship>(NUM_SHIPS, () => initShip(game));
+    let taxis = arrayOfThings<Ship>(NUM_TAXIS, () => initShip(game));
 
     ships.forEach((ship) => {
       game.add(ship);
       ship.actions.repeatForever(trade(stations, ship));
-      ship.on("pointerdown", () => {
-        navigate("/" + ship.id);
-      });
+    });
+
+    taxis.forEach((ship) => {
+      ship.color = Color.Yellow;
+      game.add(ship);
+      ship.actions.repeatForever(taxi(ships));
     });
 
     stations.forEach((station) => {
@@ -176,7 +174,19 @@ function useGame() {
 
     initCamera(gameRef.current);
     gameRef.current.start();
-    console.log(gameRef.current.canvasWidth);
+  }, []);
+
+  useEffect(() => {
+    if (!gameRef.current) return;
+    let timer = new Timer({
+      fcn: () => console.log("Every 100 ms"),
+      repeats: true,
+      interval: 100,
+    });
+
+    gameRef.current.currentScene.add(timer);
+
+    timer.start();
   }, []);
 
   useEffect(() => {
@@ -190,13 +200,6 @@ function useGame() {
         },
       });
     }, 100);
-
-    return () => clearInterval(interval);
-  }, []);
-  useEffect(() => {
-    let interval = setInterval(() => {
-      window.localStorage.setItem("pachinspac", JSON.stringify(state.actors));
-    }, 1000);
 
     return () => clearInterval(interval);
   }, []);

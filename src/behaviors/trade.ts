@@ -7,13 +7,14 @@ import {
   languages,
   names,
 } from "unique-names-generator";
-import { Ship } from "./classes/Ship";
-import { Station } from "./classes/Station";
-import { shuffle } from "./hooks/useGame";
+import { Ship } from "../classes/Ship";
+import { Station } from "../classes/Station";
+import { shuffle } from "../hooks/useGame";
 
 export function trade(stations: Station[], ship: Ship) {
   return (actions: ActionContext) => {
     if (!actions.getQueue().isComplete()) return;
+
     let station = stations[Math.floor(Math.random() * stations.length)];
     ship.attributes.destination = station;
     ship.attributes.status = "Traveling";
@@ -32,35 +33,7 @@ export function trade(stations: Station[], ship: Ship) {
             adjectives,
             animals,
             colors,
-            [
-              "😄",
-              "😀",
-              "🙂",
-              "😕",
-              "☹️",
-              "😴",
-              "❓",
-              "🕐",
-              "🕑",
-              "🕒",
-              "🕓",
-              "🕔",
-              "🕕",
-              "🕖",
-              "🕗",
-              "💬",
-              "📽️",
-              "🌌",
-              "👽",
-              "👾",
-              "🛸",
-              "👾",
-              "😱",
-              "🚀",
-              "👀",
-              "🔭",
-              "🛸",
-            ],
+            EMOTICONS,
             languages,
             names,
           ]),
@@ -85,3 +58,50 @@ export function trade(stations: Station[], ship: Ship) {
       });
   };
 }
+
+export function taxi(ships: Station[]) {
+  return (actions: ActionContext) => {
+    if (!actions.getQueue().isComplete()) return;
+
+    const stranded = ships.find(
+      (ship) => ship.attributes.status === "Stranded"
+    );
+
+    if (!stranded) return;
+
+    actions
+      .meet(stranded, Math.floor(Math.random() * 100) + 50)
+      .callMethod(() => {})
+      .delay(Math.floor(Math.random() * 30000));
+  };
+}
+
+export const EMOTICONS = [
+  "😄",
+  "😀",
+  "🙂",
+  "😕",
+  "☹️",
+  "😴",
+  "❓",
+  "🕐",
+  "🕑",
+  "🕒",
+  "🕓",
+  "🕔",
+  "🕕",
+  "🕖",
+  "🕗",
+  "💬",
+  "📽️",
+  "🌌",
+  "👽",
+  "👾",
+  "🛸",
+  "👾",
+  "😱",
+  "🚀",
+  "👀",
+  "🔭",
+  "🛸",
+];
