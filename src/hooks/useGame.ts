@@ -252,6 +252,7 @@ export function trade(stations: Station[], ship: Ship) {
           separator: " ",
           length: 6,
           seed: ship?.id,
+          style: "lowerCase",
         });
 
         let foo = ["?", ".", "...", "!"][

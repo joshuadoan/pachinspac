@@ -5,6 +5,7 @@ import { isShip, isStation } from "./utils";
 import { Meeple } from "./classes/Meeple";
 import { Color } from "excalibur";
 import Blockies from "react-blockies";
+import cx from "classnames";
 
 function App() {
   const { state, dispatch } = useGame();
@@ -100,7 +101,7 @@ function App() {
                 </Link>
               )}
               <Link
-                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left"
+                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left mb-4"
                 to={`/${actor.id}`}
               >
                 <Icon actor={actor} className="w-6 h-6 mr-4" />
@@ -125,13 +126,18 @@ function App() {
                     {Object.values(actor.attributes.visitors).map((actor) => {
                       return (
                         actor && (
-                          <div className="chat chat-start">
+                          <div
+                            className={cx("chat", {
+                              "chat-end": actor.id % 2 === 0,
+                              "chat-start": actor.id % 2 !== 0,
+                            })}
+                          >
                             <div className="chat-image avatar">
                               <Link to={`/${actor.id}`}>
                                 <Icon actor={actor} className="w-6 h-6 mr-4" />
                               </Link>
                             </div>
-                            <div className="chat-bubble">
+                            <div className="chat-bubble first-letter:capitalize">
                               {actor.attributes.chat.length &&
                                 actor.attributes.chat[0]}
                             </div>
