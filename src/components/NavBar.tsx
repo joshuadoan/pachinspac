@@ -9,7 +9,7 @@ export function NavBar(props: {
 }) {
   const { state, dispatch } = props;
   return (
-    <div className="navbar bg-base-100 z-10">
+    <div className="navbar bg-base-100 z-10 fixed">
       <div className="flex-none">
         <label
           htmlFor="side-bar"

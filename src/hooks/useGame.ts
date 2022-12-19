@@ -6,8 +6,6 @@ import {
   Text,
   Actor,
   CollisionType,
-  BoundingBox,
-  Timer,
 } from "excalibur";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,7 +20,7 @@ import { taxi, trade } from "../behaviors/trade";
 const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 2;
 const NUM_SHIPS = 30;
-const NUM_TAXIS = 1;
+const NUM_TAXIS = 3;
 const NUM_STATIONS = 5;
 
 let defaultState = {
@@ -89,8 +87,9 @@ function useGame() {
 
   function initCamera(game: Game) {
     let center = getCenterVec(game);
-    game.currentScene.camera.strategy.camera.move(center, 0);
-    game.currentScene.camera.strategy.camera.zoom = MIN_ZOOM;
+    let { camera } = game.currentScene;
+    camera.strategy.camera.zoom = MIN_ZOOM;
+    camera.strategy.camera.move(center, 0);
   }
 
   function initActors(game: Game) {
@@ -174,19 +173,6 @@ function useGame() {
 
     initCamera(gameRef.current);
     gameRef.current.start();
-  }, []);
-
-  useEffect(() => {
-    if (!gameRef.current) return;
-    let timer = new Timer({
-      fcn: () => console.log("Every 100 ms"),
-      repeats: true,
-      interval: 100,
-    });
-
-    gameRef.current.currentScene.add(timer);
-
-    timer.start();
   }, []);
 
   useEffect(() => {

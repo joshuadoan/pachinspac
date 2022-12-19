@@ -19,8 +19,8 @@ function App() {
         onChange={() => {}}
       />
       <div className="drawer-content">
-        <NavBar state={state} dispatch={dispatch} />
         <canvas id="pepper" />
+        <NavBar state={state} dispatch={dispatch} />
       </div>
       <div className="drawer-side">
         <label

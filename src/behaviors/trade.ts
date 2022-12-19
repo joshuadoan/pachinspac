@@ -63,16 +63,13 @@ export function taxi(ships: Station[]) {
   return (actions: ActionContext) => {
     if (!actions.getQueue().isComplete()) return;
 
-    const stranded = ships.find(
-      (ship) => ship.attributes.status === "Stranded"
-    );
-
-    if (!stranded) return;
-
     actions
-      .meet(stranded, Math.floor(Math.random() * 100) + 50)
+      .meet(
+        ships[Math.floor(Math.random() * ships.length)],
+        Math.floor(Math.random() * 100) + 50
+      )
       .callMethod(() => {})
-      .delay(Math.floor(Math.random() * 30000));
+      .delay(Math.floor(Math.random() * 1000));
   };
 }
 
