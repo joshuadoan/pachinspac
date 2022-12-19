@@ -15,12 +15,12 @@ import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
-import { taxi, trade } from "../behaviors/trade";
+import { taxi, behavior } from "../behaviors/trade";
 
 const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 2;
-const NUM_SHIPS = 30;
-const NUM_TAXIS = 3;
+const NUM_SHIPS = 10;
+const NUM_TAXIS = 1;
 const NUM_STATIONS = 5;
 
 let defaultState = {
@@ -99,7 +99,7 @@ function useGame() {
 
     ships.forEach((ship) => {
       game.add(ship);
-      ship.actions.repeatForever(trade(stations, ship));
+      ship.actions.repeatForever(behavior(stations, ship, game));
     });
 
     taxis.forEach((ship) => {

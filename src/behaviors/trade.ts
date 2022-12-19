@@ -1,4 +1,4 @@
-import { ActionContext } from "excalibur";
+import { ActionContext, vec } from "excalibur";
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -7,70 +7,110 @@ import {
   languages,
   names,
 } from "unique-names-generator";
+import { Game } from "../classes/Game";
+import { Meeple } from "../classes/Meeple";
 import { Ship } from "../classes/Ship";
 import { Station } from "../classes/Station";
 import { shuffle } from "../hooks/useGame";
+import { randomChance } from "../utils";
 
-export function trade(stations: Station[], ship: Ship) {
+export function behavior(stations: Station[], ship: Ship, game: Game) {
   return (actions: ActionContext) => {
-    if (!actions.getQueue().isComplete()) return;
-
-    let station = stations[Math.floor(Math.random() * stations.length)];
-    ship.attributes.destination = station;
-    ship.attributes.status = "Traveling";
-
-    actions
-      .meet(station, Math.floor(Math.random() * 100) + 50)
-      .callMethod(() => {
-        if (!ship.attributes.destination) {
+    switch (ship.attributes.status) {
+      case "Idle": {
+        if (randomChance()) {
+          strand(ship, actions);
           return;
         }
-        ship.attributes.destination.attributes.visitors[ship.id] = ship;
-        ship.attributes.status = "Visiting";
-
-        let chat = uniqueNamesGenerator({
-          dictionaries: shuffle([
-            adjectives,
-            animals,
-            colors,
-            EMOTICONS,
-            languages,
-            names,
-          ]),
-          separator: " ",
-          length: 6,
-          seed: ship?.id,
-          style: "lowerCase",
-        });
-
-        let punctuation = ["?", ".", "...", "!"][
-          Math.floor(Math.random() * ["?", ".", "...", "!"].length)
-        ];
-
-        ship.attributes.chat = [chat + punctuation];
-      })
-      .delay(Math.floor(Math.random() * 30000))
-      .callMethod(() => {
-        if (!ship.attributes.destination) {
-          return;
-        }
-        ship.attributes.destination.attributes.visitors[ship.id] = null;
-      });
+        trade(ship, actions, stations);
+        return;
+      }
+    }
   };
+}
+
+function trade(ship: Ship, actions: ActionContext, stations: Station[]) {
+  ship.attributes.status = "Traveling";
+
+  let station = stations[Math.floor(Math.random() * stations.length)];
+  ship.attributes.destination = station;
+
+  actions
+    .meet(ship.attributes.destination, Math.floor(Math.random() * 100) + 50)
+    .callMethod(() => {
+      ship.attributes.status = "Visiting";
+      if (ship.attributes.destination) {
+        ship.attributes.destination.attributes.visitors[ship.id] = ship;
+      }
+      let { chat, punctuation } = getChat(ship);
+      ship.attributes.chat = [chat + punctuation];
+    })
+    .delay(10 * 1000)
+    .callMethod(() => {
+      if (ship.attributes.destination) {
+        ship.attributes.destination.attributes.visitors[ship.id] = null;
+      }
+
+      ship.attributes.status = "Idle";
+    });
+}
+
+function strand(ship: Ship, actions: ActionContext) {
+  ship.attributes.destination = null;
+
+  actions
+    .moveTo(
+      vec(Math.floor(Math.random() * 500), Math.floor(Math.random() * 500)),
+      Math.floor(Math.random() * 100) + 50
+    )
+    .callMethod(() => {
+      ship.attributes.status = "Stranded";
+    });
 }
 
 export function taxi(ships: Station[]) {
   return (actions: ActionContext) => {
     if (!actions.getQueue().isComplete()) return;
 
+    let stranded = ships.find((ship) => ship.attributes.status === "Stranded");
+
+    if (!stranded) {
+      actions.clearActions();
+      return;
+    }
+
     actions
-      .meet(
-        ships[Math.floor(Math.random() * ships.length)],
-        Math.floor(Math.random() * 100) + 50
-      )
-      .callMethod(() => {})
+      .meet(stranded, Math.floor(Math.random() * 100) + 50)
+      .callMethod(() => {
+        if (!stranded) {
+          return;
+        }
+        stranded.attributes.status = "Idle";
+      })
       .delay(Math.floor(Math.random() * 1000));
   };
+}
+
+function getChat(meeple: Meeple) {
+  let chat = uniqueNamesGenerator({
+    dictionaries: shuffle([
+      adjectives,
+      animals,
+      colors,
+      EMOTICONS,
+      languages,
+      names,
+    ]),
+    separator: " ",
+    length: 6,
+    seed: meeple?.id,
+    style: "lowerCase",
+  });
+
+  let punctuation = ["?", ".", "...", "!"][
+    Math.floor(Math.random() * ["?", ".", "...", "!"].length)
+  ];
+  return { chat, punctuation };
 }
 
 export const EMOTICONS = [

@@ -19,8 +19,4 @@ export class Ship extends Meeple {
       color: MeepleColors[Math.floor(Math.random() * MeepleColors.length)],
     });
   }
-
-  onInitialize() {
-    console.log("INIT " + this.name);
-  }
 }
