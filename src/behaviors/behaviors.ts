@@ -79,6 +79,7 @@ export function taxi(ship: Ship, ships: Station[]) {
     }
 
     ship.attributes.status = "Picking up";
+    ship.attributes.destination = stranded;
 
     actions
       .blink(500, 250, 3)
@@ -90,8 +91,8 @@ export function taxi(ship: Ship, ships: Station[]) {
         }
         stranded.attributes.status = "Idle";
         ship.attributes.status = "Idle";
+        ship.attributes.destination = null;
       });
-    // .meet(stranded.attributes.destination);
   };
 }
 
