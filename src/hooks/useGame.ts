@@ -9,6 +9,16 @@ import {
   CollisionType,
   BoundingBox,
 } from "excalibur";
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  animals,
+  colors,
+  countries,
+  languages,
+  names,
+  starWars,
+} from "unique-names-generator";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
@@ -229,6 +239,26 @@ export function trade(stations: Station[], ship: Ship) {
         }
         ship.attributes.destination.attributes.visitors[ship.id] = ship;
         ship.attributes.status = "Visiting";
+
+        let randomName = uniqueNamesGenerator({
+          dictionaries: [
+            adjectives,
+            animals,
+            colors,
+            countries,
+            languages,
+            names,
+          ],
+          separator: " ",
+          length: 6,
+          seed: ship?.id,
+        });
+
+        let foo = ["?", ".", "...", "!"][
+          Math.floor(Math.random() * ["?", ".", "...", "!"].length)
+        ];
+
+        ship.attributes.chat = [randomName + foo];
       })
       .delay(Math.floor(Math.random() * 30000))
       .callMethod(() => {

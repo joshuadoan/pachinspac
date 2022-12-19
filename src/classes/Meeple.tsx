@@ -16,6 +16,7 @@ export class Meeple extends Actor {
     visitors: {
       [key: string]: Meeple | null;
     };
+    chat: string[];
   } = {
     destination: null,
     health: 100,

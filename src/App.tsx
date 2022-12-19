@@ -57,9 +57,9 @@ function App() {
                       All
                     </Link>
                   </li>
-                  <li className="gap-4">
+                  <li>
                     <Link
-                      className="btn btn-ghost uppercase text-xl flex gap-4"
+                      className="btn btn-ghost uppercase text-xl flex gap-4 mr-4"
                       to={`/${state.selected.id}`}
                       onClick={() =>
                         dispatch({
@@ -122,8 +122,8 @@ function App() {
                     )}
                   </div>
                   <div className="px-4">
-                    {Object.values(actor.attributes.visitors).map(
-                      (actor) =>
+                    {Object.values(actor.attributes.visitors).map((actor) => {
+                      return (
                         actor && (
                           <div className="chat chat-start">
                             <div className="chat-image avatar">
@@ -131,10 +131,14 @@ function App() {
                                 <Icon actor={actor} className="w-6 h-6 mr-4" />
                               </Link>
                             </div>
-                            <div className="chat-bubble">{actor.name}</div>
+                            <div className="chat-bubble">
+                              {actor.attributes.chat.length &&
+                                actor.attributes.chat[0]}
+                            </div>
                           </div>
                         )
-                    )}
+                      );
+                    })}
                   </div>
                 </>
               )}
@@ -196,4 +200,16 @@ function Avatar({
       color={color.toRGBA()}
     />
   );
+}
+
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items An array containing the items.
+ */
+function shuffle(a: any[]) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
