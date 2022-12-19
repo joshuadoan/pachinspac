@@ -240,26 +240,25 @@ export function trade(stations: Station[], ship: Ship) {
         ship.attributes.destination.attributes.visitors[ship.id] = ship;
         ship.attributes.status = "Visiting";
 
-        let randomName = uniqueNamesGenerator({
-          dictionaries: [
+        let chat = uniqueNamesGenerator({
+          dictionaries: shuffle([
             adjectives,
             animals,
             colors,
-            countries,
             languages,
             names,
-          ],
+          ]),
           separator: " ",
-          length: 6,
+          length: 5,
           seed: ship?.id,
           style: "lowerCase",
         });
 
-        let foo = ["?", ".", "...", "!"][
+        let punctuation = ["?", ".", "...", "!"][
           Math.floor(Math.random() * ["?", ".", "...", "!"].length)
         ];
 
-        ship.attributes.chat = [randomName + foo];
+        ship.attributes.chat = [chat + punctuation];
       })
       .delay(Math.floor(Math.random() * 30000))
       .callMethod(() => {
@@ -309,3 +308,23 @@ function reducer(state: State, event: Event) {
 }
 
 export default useGame;
+
+function shuffle(array: any[]) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
