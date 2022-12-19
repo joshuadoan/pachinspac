@@ -74,8 +74,7 @@ export function taxi(ship: Ship, ships: Station[]) {
 
     let stranded = ships.find((ship) => ship.attributes.status === "Stranded");
 
-    if (!stranded) {
-      actions.clearActions();
+    if (!stranded || ship.attributes.status === "Picking up") {
       return;
     }
 
@@ -83,14 +82,16 @@ export function taxi(ship: Ship, ships: Station[]) {
 
     actions
       .blink(500, 250, 3)
-      .meet(stranded, Math.floor(Math.random() * 100) + 50)
-      .delay(Math.floor(Math.random() * 1000))
+      .meet(stranded, 100)
+      .blink(500, 250, 3)
       .callMethod(() => {
         if (!stranded) {
           return;
         }
         stranded.attributes.status = "Idle";
+        ship.attributes.status = "Idle";
       });
+    // .meet(stranded.attributes.destination);
   };
 }
 

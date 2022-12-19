@@ -15,7 +15,7 @@ import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
-import { taxi, behavior } from "../behaviors/trade";
+import { taxi, behavior } from "../behaviors/behaviors";
 
 const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 2;
