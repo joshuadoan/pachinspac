@@ -2,7 +2,8 @@ import { Actor } from "excalibur";
 
 export type ShipStatus = "Idle" | "Traveling" | "Visiting" | "Stranded";
 export type StationStatus = "Closed" | "Open";
-export type MeepleStatus = ShipStatus | StationStatus;
+export type TaxiStatus = "Idle" | "Picking up";
+export type MeepleStatus = ShipStatus | StationStatus | TaxiStatus;
 
 export class Meeple extends Actor {
   public health: number = 100;

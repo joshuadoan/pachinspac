@@ -68,7 +68,7 @@ function strand(ship: Ship, actions: ActionContext) {
     });
 }
 
-export function taxi(ships: Station[]) {
+export function taxi(ship: Ship, ships: Station[]) {
   return (actions: ActionContext) => {
     if (!actions.getQueue().isComplete()) return;
 
@@ -79,15 +79,18 @@ export function taxi(ships: Station[]) {
       return;
     }
 
+    ship.attributes.status = "Picking up";
+
     actions
+      .blink(500, 250, 3)
       .meet(stranded, Math.floor(Math.random() * 100) + 50)
+      .delay(Math.floor(Math.random() * 1000))
       .callMethod(() => {
         if (!stranded) {
           return;
         }
         stranded.attributes.status = "Idle";
-      })
-      .delay(Math.floor(Math.random() * 1000));
+      });
   };
 }
 

@@ -19,7 +19,7 @@ import { taxi, behavior } from "../behaviors/trade";
 
 const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 2;
-const NUM_SHIPS = 10;
+const NUM_SHIPS = 30;
 const NUM_TAXIS = 1;
 const NUM_STATIONS = 5;
 
@@ -105,7 +105,7 @@ function useGame() {
     taxis.forEach((ship) => {
       ship.color = Color.Yellow;
       game.add(ship);
-      ship.actions.repeatForever(taxi(ships));
+      ship.actions.repeatForever(taxi(ship, ships));
     });
 
     stations.forEach((station) => {
