@@ -8,7 +8,6 @@ import {
   CollisionType,
   BoundingBox,
 } from "excalibur";
-import { countries, starWars } from "unique-names-generator";
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
@@ -19,7 +18,7 @@ import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
 import { trade } from "../trade";
 
-const MIN_ZOOM = 1;
+const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 2;
 const NUM_SHIPS = 30;
 const NUM_STATIONS = 5;

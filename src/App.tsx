@@ -26,6 +26,9 @@ function App() {
         <label
           htmlFor="side-bar"
           className="drawer-overlay"
+          style={{
+            opacity: 0,
+          }}
           onClick={() =>
             dispatch({
               type: "toggle-side-bar",
@@ -35,23 +38,24 @@ function App() {
         <ul className="py-4 w-80 bg-base-100 text-base-content space-y-2">
           {state.actors
             .filter((meeple) => {
-              if (
-                state.selected &&
-                state.selected &&
-                meeple.id === state.selected.id
-              ) {
+              if (!state.selected) {
+                return (
+                  (state.filters.ships && isShip(meeple)) ||
+                  (state.filters.stations && isStation(meeple))
+                );
+              }
+
+              if (state.selected && meeple.id === state.selected.id) {
                 return state.selected;
               }
-              return (
-                (state.filters.ships && isShip(meeple)) ||
-                (state.filters.stations && isStation(meeple))
-              );
+
+              return false;
             })
             .map((actor) => (
               <li key={actor.id}>
                 {state.selected && (
                   <Link to="/" className="btn btn-link">
-                    All
+                    back
                   </Link>
                 )}
                 <Link
