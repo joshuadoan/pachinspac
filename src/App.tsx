@@ -91,16 +91,16 @@ function App() {
             })
           }
         />
-        <ul className="py-4 w-80 bg-base-100 text-base-content space-y-1">
+        <ul className="py-4 w-80 bg-base-100 text-base-content space-y-2">
           {filtered.map((actor) => (
             <li>
               {state.selected && (
                 <Link to="/" className="btn btn-link">
-                  Back
+                  All
                 </Link>
               )}
               <Link
-                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-2"
+                className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left"
                 to={`/${actor.id}`}
               >
                 <Icon actor={actor} className="w-6 h-6 mr-4" />
@@ -121,17 +121,18 @@ function App() {
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="px-4">
                     {Object.values(actor.attributes.visitors).map(
                       (actor) =>
                         actor && (
-                          <Link
-                            className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-2"
-                            to={`/${actor.id}`}
-                          >
-                            <Icon actor={actor} className="w-6 h-6 mr-4" />
-                            {actor.name}
-                          </Link>
+                          <div className="chat chat-start">
+                            <div className="chat-image avatar">
+                              <Link to={`/${actor.id}`}>
+                                <Icon actor={actor} className="w-6 h-6 mr-4" />
+                              </Link>
+                            </div>
+                            <div className="chat-bubble">{actor.name}</div>
+                          </div>
                         )
                     )}
                   </div>

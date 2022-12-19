@@ -230,7 +230,7 @@ export function trade(stations: Station[], ship: Ship) {
         ship.attributes.destination.attributes.visitors[ship.id] = ship;
         ship.attributes.status = "Visiting";
       })
-      .delay(Math.floor(Math.random() * 5000))
+      .delay(Math.floor(Math.random() * 30000))
       .callMethod(() => {
         if (!ship.attributes.destination) {
           return;

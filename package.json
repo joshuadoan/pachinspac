@@ -22,7 +22,8 @@
     "react-dom": "^18.2.0",
     "react-fps": "^1.0.6",
     "react-router-dom": "^6.4.3",
-    "sort-by": "^0.0.2"
+    "sort-by": "^0.0.2",
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
