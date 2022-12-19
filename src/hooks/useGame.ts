@@ -40,79 +40,6 @@ function useGame() {
   let gameRef = useRef<Game | null>();
   let [state, dispatch] = useReducer(reducer, defaultState);
 
-  function togglePaused(state: State, game: Game) {
-    return state.isPaused ? game.stop() : game.start();
-  }
-
-  function initStation(): Station {
-    let station = new Station();
-    if (!gameRef.current) return station;
-
-    station.pos = getRandomScreenPosition(gameRef.current);
-    station.on("pointerdown", () => {
-      navigate("/" + station.id);
-    });
-
-    station.attributes = {
-      ...station.attributes,
-      status: "Open",
-    };
-
-    var text = new Text({
-      text: station.name,
-      font: new Font({
-        family: "verdana",
-        size: 1,
-        unit: FontUnit.Rem,
-        color: Color.Orange,
-      }),
-    });
-
-    const actor = new Actor({
-      pos: vec(0, -10),
-      collisionType: CollisionType.Active,
-      width: text.width,
-      height: text.height,
-    });
-
-    actor.graphics.use(text);
-
-    actor.on("pointerdown", () => {
-      navigate("/" + station.id);
-    });
-
-    station.addChild(actor);
-    return station;
-  }
-
-  function initCamera(game: Game) {
-    let center = getCenterVec(game);
-    let { camera } = game.currentScene;
-    camera.strategy.camera.zoom = MIN_ZOOM;
-    camera.strategy.camera.move(center, 0);
-  }
-
-  function initActors(game: Game) {
-    let stations = arrayOfThings<Station>(NUM_STATIONS, initStation);
-    let ships = arrayOfThings<Ship>(NUM_SHIPS, () => initShip(game));
-    let taxis = arrayOfThings<Ship>(NUM_TAXIS, () => initShip(game));
-
-    ships.forEach((ship) => {
-      game.add(ship);
-      ship.actions.repeatForever(behavior(stations, ship, game));
-    });
-
-    taxis.forEach((ship) => {
-      ship.color = Color.Yellow;
-      game.add(ship);
-      ship.actions.repeatForever(taxi(ship, ships));
-    });
-
-    stations.forEach((station) => {
-      game.add(station);
-    });
-  }
-
   function getCenterVec(game: Game) {
     let center = vec(
       (game.drawWidth / 2) * game.currentScene.camera.zoom,
@@ -144,39 +71,54 @@ function useGame() {
         MAX_ZOOM,
         1000
       );
-      gameRef.current.selected = selected;
     } else {
       let center = getCenterVec(gameRef.current);
-      gameRef.current.currentScene.camera.clearAllStrategies();
       gameRef.current.currentScene.camera.strategy.camera.move(center, 1000);
       gameRef.current.currentScene.camera.strategy.camera.zoomOverTime(
         MIN_ZOOM,
         1000
       );
-      gameRef.current.selected = null;
     }
   }, [id]);
 
   useEffect(() => {
-    gameRef.current = new Game();
-    let actors = window.localStorage.getItem("pachinspac");
+    let game = new Game();
+    gameRef.current = game;
 
-    if (actors && JSON.parse(actors).length) {
-      dispatch({
-        type: "update-actors",
-        payload: JSON.parse(actors),
-      });
-      JSON.parse(actors);
-    } else {
-      initActors(gameRef.current);
-    }
+    let stations = arrayOfThings<Station>(NUM_STATIONS, () =>
+      initStation(game, (id) => {
+        navigate("/" + id);
+      })
+    );
 
-    initCamera(gameRef.current);
+    let ships = arrayOfThings<Ship>(NUM_SHIPS, () => initShip(game));
+    let taxis = arrayOfThings<Ship>(NUM_TAXIS, () => initShip(game));
+
+    ships.forEach((ship) => {
+      game.add(ship);
+      ship.actions.repeatForever(behavior(stations, ship, game));
+    });
+
+    taxis.forEach((ship) => {
+      ship.color = Color.Yellow;
+      game.add(ship);
+      ship.actions.repeatForever(taxi(ship, ships));
+    });
+
+    stations.forEach((station) => {
+      game.add(station);
+    });
+
+    let center = getCenterVec(game);
+    let { camera } = game.currentScene;
+    camera.strategy.camera.zoom = MIN_ZOOM;
+    camera.strategy.camera.move(center, 0);
+
     gameRef.current.start();
   }, []);
 
   useEffect(() => {
-    let interval = setInterval(() => {
+    function updateActors() {
       let game = gameRef.current;
 
       dispatch({
@@ -185,16 +127,49 @@ function useGame() {
           actors: game?.currentScene.actors as Meeple[],
         },
       });
-    }, 100);
+    }
 
+    let interval = setInterval(updateActors, 100);
     return () => clearInterval(interval);
   }, []);
 
   return {
     dispatch,
     state,
-    togglePaused,
   };
+}
+
+function initStation(game: Game, onClick: (id: number) => void): Station {
+  let station = new Station();
+
+  station.pos = getRandomScreenPosition(game);
+  station.on("pointerdown", () => onClick(station.id));
+
+  station.attributes = {
+    ...station.attributes,
+    status: "Open",
+  };
+
+  var text = new Text({
+    text: station.name,
+    font: new Font({
+      family: "verdana",
+      size: 1,
+      unit: FontUnit.Rem,
+      color: Color.Orange,
+    }),
+  });
+
+  const actor = new Actor({
+    pos: vec(0, -10),
+    collisionType: CollisionType.Active,
+    width: text.width,
+    height: text.height,
+  });
+
+  actor.graphics.use(text);
+  station.addChild(actor);
+  return station;
 }
 
 function initShip(game: Game): Ship {
