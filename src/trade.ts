@@ -32,11 +32,12 @@ export function trade(stations: Station[], ship: Ship) {
             adjectives,
             animals,
             colors,
+            ["😄", "😀", "🙂", "😕", "☹️", "😴", "❓"],
             languages,
             names,
           ]),
           separator: " ",
-          length: 5,
+          length: 6,
           seed: ship?.id,
           style: "lowerCase",
         });
