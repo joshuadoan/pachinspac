@@ -35,7 +35,7 @@ function App() {
             })
           }
         />
-        <ul className="py-4 w-80 bg-base-100 text-base-content space-y-2">
+        <ul className="py-4 w-80 bg-base-100 text-base-content ">
           {state.actors
             .filter((meeple) => {
               if (!state.selected) {
@@ -52,14 +52,14 @@ function App() {
               return false;
             })
             .map((actor) => (
-              <li key={actor.id}>
+              <li key={actor.id} className="mb-8">
                 {state.selected && (
                   <Link to="/" className="btn btn-link">
                     back
                   </Link>
                 )}
                 <Link
-                  className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left mb-4"
+                  className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left "
                   to={`/${actor.id}`}
                 >
                   <Avatar
@@ -67,8 +67,15 @@ function App() {
                     name={actor.name}
                     className="mask mask-circle w-6 h-6 "
                   />
-                  {actor.name}
+                  <div>
+                    {actor.name}
+                    <div className="text-sm font-light">
+                      <span className="badge">{actor.attributes.status}</span> °
+                      {Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
+                    </div>
+                  </div>
                 </Link>
+
                 {actor.id === state.selected?.id && (
                   <div>
                     <div className="stat bg-white bg-opacity-50 space-y-2 mb-4">
