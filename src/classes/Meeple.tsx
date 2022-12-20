@@ -1,5 +1,6 @@
 import { Actor } from "excalibur";
 
+export type Role = "Unknown" | "Trader" | "Station" | "Taxi";
 export type ShipStatus = "Idle" | "Traveling" | "Visiting" | "Stranded";
 export type StationStatus = "Closed" | "Open";
 export type TaxiStatus = "Idle" | "Picking up";
@@ -18,6 +19,7 @@ export class Meeple extends Actor {
       [key: string]: Meeple | null;
     };
     chat: string[];
+    role: Role;
   } = {
     destination: null,
     health: 100,
@@ -25,5 +27,6 @@ export class Meeple extends Actor {
     status: "Idle",
     visitors: {},
     chat: [],
+    role: "Unknown",
   };
 }

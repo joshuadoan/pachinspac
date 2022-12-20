@@ -17,5 +17,7 @@ export class Ship extends Meeple {
       name: randomName,
       color: MeepleColors[Math.floor(Math.random() * MeepleColors.length)],
     });
+
+    this.attributes.role = "Trader";
   }
 }

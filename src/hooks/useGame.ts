@@ -15,10 +15,10 @@ import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
-import { taxi, behavior } from "../behaviors/behaviors";
+import { taxi, trader } from "../behaviors/behaviors";
 
-const MIN_ZOOM = 0.6;
-const MAX_ZOOM = 2;
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 1.2;
 const NUM_SHIPS = 30;
 const NUM_TAXIS = 1;
 const NUM_STATIONS = 5;
@@ -61,23 +61,18 @@ function useGame() {
       },
     });
 
+    let { camera } = gameRef.current.currentScene;
+
     if (selected) {
-      gameRef.current.currentScene.camera.strategy.elasticToActor(
-        selected,
-        0.3,
-        0.3
-      );
-      gameRef.current.currentScene.camera.strategy.camera.zoomOverTime(
-        MAX_ZOOM,
-        1000
-      );
+      camera.clearAllStrategies();
+      camera.strategy.elasticToActor(selected, 0.3, 0.3);
+      camera.strategy.camera.zoomOverTime(MAX_ZOOM, 1000);
     } else {
+      camera.clearAllStrategies();
+
       let center = getCenterVec(gameRef.current);
-      gameRef.current.currentScene.camera.strategy.camera.move(center, 1000);
-      gameRef.current.currentScene.camera.strategy.camera.zoomOverTime(
-        MIN_ZOOM,
-        1000
-      );
+      camera.strategy.camera.move(center, 1000);
+      camera.strategy.camera.zoomOverTime(MIN_ZOOM, 1000);
     }
   }, [id]);
 
@@ -96,13 +91,15 @@ function useGame() {
 
     ships.forEach((ship) => {
       game.add(ship);
-      ship.actions.repeatForever(behavior(stations, ship, game));
+      ship.actions.repeatForever(trader(stations, ship, game));
     });
 
     taxis.forEach((ship) => {
       ship.color = Color.Yellow;
-      game.add(ship);
+      ship.attributes.role = "Taxi";
       ship.actions.repeatForever(taxi(ship, ships));
+
+      game.add(ship);
     });
 
     stations.forEach((station) => {
@@ -111,6 +108,7 @@ function useGame() {
 
     let center = getCenterVec(game);
     let { camera } = game.currentScene;
+
     camera.strategy.camera.zoom = MIN_ZOOM;
     camera.strategy.camera.move(center, 0);
 

@@ -21,10 +21,11 @@ export class Station extends Meeple {
     });
     super({
       pos: vec(100, 100),
-      width: 10,
-      height: 10,
+      width: 8,
+      height: 8,
       color: Color.Orange,
       name: randomName,
     });
+    this.attributes.role = "Station";
   }
 }
