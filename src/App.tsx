@@ -35,7 +35,7 @@ function App() {
             })
           }
         />
-        <ul className="py-4 w-80 bg-base-100 text-base-content ">
+        <ul className="py-4 w-80 bg-base-100 text-base-content space-y-2">
           {state.actors
             .filter((meeple) => {
               if (!state.selected) {
@@ -52,7 +52,7 @@ function App() {
               return false;
             })
             .map((actor) => (
-              <li key={actor.id} className="">
+              <li key={actor.id}>
                 {state.selected && (
                   <Link to="/" className="btn btn-link">
                     back
@@ -68,6 +68,11 @@ function App() {
                     className="mask mask-circle w-6 h-6 "
                   />
                   <div>
+                    <div className="text-sm font-light">
+                      <span className="badge badge-primary badge-outline">
+                        {actor.attributes.role}
+                      </span>
+                    </div>
                     {actor.name}
                     <div className="text-sm font-light">
                       <span className="badge">{actor.attributes.status}</span> °
