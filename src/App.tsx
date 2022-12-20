@@ -34,7 +34,7 @@ function App() {
             })
           }
         />
-        <div className=" w-80 bg-base-100 text-base-content">
+        <div className=" w-80 bg-base-100 text-base-content shadow-md">
           {!state.selected && (
             <form className="text-sm flex gap-4 bg-white px-4 py-1">
               {["Trader", "Station", "Taxi"].map((filter) => (
