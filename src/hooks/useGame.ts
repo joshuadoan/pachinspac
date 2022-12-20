@@ -27,8 +27,7 @@ let defaultState = {
   isPaused: false,
   actors: [],
   filters: {
-    ships: true,
-    stations: true,
+    Trader: true,
   },
   selected: null,
   sidebarIsOpen: false,
@@ -202,6 +201,7 @@ function reducer(state: State, event: Event) {
       };
     }
     case "update-filters": {
+      console.log("knknknk");
       return {
         ...state,
         filters: {

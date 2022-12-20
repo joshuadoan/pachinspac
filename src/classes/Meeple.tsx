@@ -19,7 +19,7 @@ export class Meeple extends Actor {
       [key: string]: Meeple | null;
     };
     chat: string[];
-    role: Role;
+    role: string;
   } = {
     destination: null,
     health: 100,

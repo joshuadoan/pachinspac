@@ -1,6 +1,5 @@
 import useGame from "./hooks/useGame";
 import { Link } from "react-router-dom";
-import { isShip, isStation } from "./utils";
 import { NavBar } from "./components/NavBar";
 import { Details } from "./components/Details";
 import { Avatar } from "./components/Avatar";
@@ -35,76 +34,99 @@ function App() {
             })
           }
         />
-        <ul className="py-4 w-80 bg-base-100 text-base-content space-y-2">
-          {state.actors
-            .filter((meeple) => {
-              if (!state.selected) {
-                return (
-                  (state.filters.ships && isShip(meeple)) ||
-                  (state.filters.stations && isStation(meeple))
-                );
-              }
-
-              if (state.selected && meeple.id === state.selected.id) {
-                return state.selected;
-              }
-
-              return false;
-            })
-            .map((actor) => (
-              <li key={actor.id}>
-                {state.selected && (
-                  <Link to="/" className="btn btn-link">
-                    back
-                  </Link>
-                )}
-                <Link
-                  className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left h-auto p-2"
-                  to={`/${actor.id}`}
-                >
-                  <Avatar
-                    color={actor.color}
-                    name={actor.name}
-                    className="mask mask-circle w-6 h-6 "
+        <div className=" w-80 bg-base-100 text-base-content">
+          {!state.selected && (
+            <form className="text-sm flex gap-4 bg-white px-4 py-1">
+              {["Trader", "Station", "Taxi"].map((filter) => (
+                <label key={filter} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    defaultChecked={state.filters[filter]}
+                    className="checkbox checkbox-sm"
+                    onClick={() =>
+                      dispatch({
+                        type: "update-filters",
+                        payload: {
+                          filters: {
+                            [filter]: !state.filters[filter],
+                          },
+                        },
+                      })
+                    }
                   />
-                  <div>
-                    <div className="text-sm font-light">
-                      <span className="badge badge-primary badge-outline">
-                        {actor.attributes.role}
-                      </span>
-                    </div>
-                    {actor.name}
-                    <div className="text-sm font-light">
-                      <span className="badge">{actor.attributes.status}</span> °
-                      {Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
-                    </div>
-                  </div>
-                </Link>
+                  {filter}
+                </label>
+              ))}
+            </form>
+          )}
+          <ul className=" space-y-2">
+            {state.actors
+              .filter((meeple) => {
+                if (!state.selected && meeple.attributes) {
+                  return state.filters[meeple.attributes.role];
+                }
 
-                {actor.id === state.selected?.id && (
-                  <div>
-                    <div className="stat bg-white bg-opacity-50 space-y-2 mb-4">
-                      <div className="stat-title">
-                        loc °{Math.round(actor.pos.y)} °
-                        {Math.round(actor.pos.x)}
+                if (state.selected && meeple.id === state.selected.id) {
+                  return state.selected;
+                }
+
+                return false;
+              })
+              .map((actor) => (
+                <li key={actor.id}>
+                  {state.selected && (
+                    <Link to="/" className="btn btn-link">
+                      back
+                    </Link>
+                  )}
+                  <Link
+                    className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left h-auto p-2"
+                    to={`/${actor.id}`}
+                  >
+                    <Avatar
+                      color={actor.color}
+                      name={actor.name}
+                      className="mask mask-circle w-6 h-6 "
+                    />
+                    <div>
+                      <div className="text-sm font-light">
+                        <span className="badge badge-primary badge-outline">
+                          {actor.attributes.role}
+                        </span>
                       </div>
-                      <div className="stat-value">
-                        {actor.attributes.status}
+                      {actor.name}
+                      <div className="text-sm font-light">
+                        <span className="badge">{actor.attributes.status}</span>{" "}
+                        °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                       </div>
-                      {actor.attributes.destination && (
-                        <div className="stat-desc">
-                          <Link to={`/${actor.attributes.destination.id}`}>
-                            {actor.attributes.destination?.name}
-                          </Link>
-                        </div>
-                      )}
                     </div>
-                    <Details actor={actor} />
-                  </div>
-                )}
-              </li>
-            ))}
-        </ul>
+                  </Link>
+
+                  {actor.id === state.selected?.id && (
+                    <div>
+                      <div className="stat bg-white bg-opacity-50 space-y-2 mb-4">
+                        <div className="stat-title">
+                          loc °{Math.round(actor.pos.y)} °
+                          {Math.round(actor.pos.x)}
+                        </div>
+                        <div className="stat-value">
+                          {actor.attributes.status}
+                        </div>
+                        {actor.attributes.destination && (
+                          <div className="stat-desc">
+                            <Link to={`/${actor.attributes.destination.id}`}>
+                              {actor.attributes.destination?.name}
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                      <Details actor={actor} />
+                    </div>
+                  )}
+                </li>
+              ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

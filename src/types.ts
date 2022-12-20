@@ -1,8 +1,7 @@
 import { Meeple } from "./classes/Meeple";
 
-export type Filter = "ships" | "stations";
 export type Filters = {
-  [key in Filter]?: boolean;
+  [role: string]: boolean;
 };
 export type State = {
   isPaused: boolean;
