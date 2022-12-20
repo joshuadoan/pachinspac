@@ -28,6 +28,8 @@ let defaultState = {
   actors: [],
   filters: {
     Trader: true,
+    Station: true,
+    Taxi: true,
   },
   selected: null,
   sidebarIsOpen: false,
