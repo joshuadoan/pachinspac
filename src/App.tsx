@@ -47,7 +47,7 @@ function App() {
             })
           }
         />
-        <div className=" w-80 bg-base-100 text-base-content shadow-md">
+        <div className=" w-80 bg-base-100 text-base-content border-r border-base-200 mt-16 ">
           {!state.selected && (
             <form className="text-sm flex gap-4  px-4 py-3">
               {["Trader", "Station", "Maintenance"].map((filter) => (
@@ -98,28 +98,32 @@ function App() {
                       back
                     </Link>
                   )}
-                  <Link
-                    className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left h-auto p-2"
-                    to={`/${actor.id}`}
-                  >
-                    <Avatar
-                      color={actor.color}
-                      name={actor.name}
-                      className="mask mask-circle w-6 h-6 "
-                    />
-                    <div>
-                      <div className="text-sm font-light">
-                        <span className="badge badge-primary badge-outline">
-                          {actor.attributes.role}
-                        </span>
+                  {!state.selected && (
+                    <Link
+                      className="btn btn-ghost text-lg capitalize flex flex-nowrap justify-start gap-3 text-left h-auto p-2"
+                      to={`/${actor.id}`}
+                    >
+                      <Avatar
+                        color={actor.color}
+                        name={actor.name}
+                        className="mask mask-circle w-6 h-6 "
+                      />
+                      <div>
+                        <div className="text-sm font-light">
+                          <span className="badge badge-primary badge-outline">
+                            {actor.attributes.role}
+                          </span>
+                        </div>
+                        {actor.name}
+                        <div className="text-sm font-light">
+                          <span className="badge">
+                            {actor.attributes.status}
+                          </span>{" "}
+                          °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
+                        </div>
                       </div>
-                      {actor.name}
-                      <div className="text-sm font-light">
-                        <span className="badge">{actor.attributes.status}</span>{" "}
-                        °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
-                      </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  )}
 
                   {actor.id === state.selected?.id && (
                     <div>
