@@ -51,7 +51,7 @@ export const isStation = (shape: Meeple): shape is Station =>
 
 export function randomChance() {
   let random = Math.random();
-  return random < 0.05 ? true : false;
+  return random < 0.01 ? true : false;
 }
 
 export function bySelectedFilters(filters: Filters, meeple: Meeple) {
