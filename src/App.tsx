@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import { Details } from "./components/Details";
 import { Avatar } from "./components/Avatar";
+import {
+  BuildingStorefrontIcon,
+  RocketLaunchIcon,
+  WrenchIcon,
+} from "@heroicons/react/24/outline";
+
 import "./App.css";
 
 function App() {
@@ -36,8 +42,8 @@ function App() {
         />
         <div className=" w-80 bg-base-100 text-base-content shadow-md">
           {!state.selected && (
-            <form className="text-sm flex gap-4 bg-white px-4 py-1">
-              {["Trader", "Station", "Taxi"].map((filter) => (
+            <form className="text-sm flex gap-4  px-4 py-3">
+              {["Trader", "Station", "Maintenance"].map((filter) => (
                 <label key={filter} className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -54,7 +60,13 @@ function App() {
                       })
                     }
                   />
-                  {filter}
+                  {
+                    {
+                      Trader: <RocketLaunchIcon className="w-6 h-6" />,
+                      Station: <BuildingStorefrontIcon className="w-6 h-6" />,
+                      Maintenance: <WrenchIcon className="w-6 h-6" />,
+                    }[filter]
+                  }
                 </label>
               ))}
             </form>

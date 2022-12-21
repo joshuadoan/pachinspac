@@ -1,10 +1,10 @@
 import { Actor } from "excalibur";
 
-export type Role = "Unknown" | "Trader" | "Station" | "Taxi";
+export type Role = "Unknown" | "Trader" | "Station" | "Maintenance";
 export type ShipStatus = "Idle" | "Traveling" | "Visiting" | "Stranded";
 export type StationStatus = "Closed" | "Open";
-export type TaxiStatus = "Idle" | "Picking up";
-export type MeepleStatus = ShipStatus | StationStatus | TaxiStatus;
+export type MaintenanceStatus = "Idle" | "Repairing";
+export type MeepleStatus = ShipStatus | StationStatus | MaintenanceStatus;
 
 export class Meeple extends Actor {
   public health: number = 100;
@@ -20,6 +20,10 @@ export class Meeple extends Actor {
     };
     chat: string[];
     role: string;
+    log: {
+      date: string;
+      message: string;
+    }[];
   } = {
     destination: null,
     health: 100,
@@ -28,5 +32,6 @@ export class Meeple extends Actor {
     visitors: {},
     chat: [],
     role: "Unknown",
+    log: [],
   };
 }

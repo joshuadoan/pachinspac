@@ -10,17 +10,17 @@ import {
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
-import { Ship } from "../classes/Ship";
+import { Ship, Maintenance } from "../classes/Ship";
 import { Station } from "../classes/Station";
 import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
-import { taxi, trader } from "../behaviors/behaviors";
+import { maintenance, trader } from "../behaviors/behaviors";
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 1.2;
 const NUM_SHIPS = 30;
-const NUM_TAXIS = 1;
+const NUM_MAINTENANCE = 1;
 const NUM_STATIONS = 5;
 
 let defaultState = {
@@ -29,7 +29,7 @@ let defaultState = {
   filters: {
     Trader: true,
     Station: true,
-    Taxi: true,
+    Maintenance: true,
   },
   selected: null,
   sidebarIsOpen: false,
@@ -88,17 +88,17 @@ function useGame() {
     );
 
     let ships = arrayOfThings<Ship>(NUM_SHIPS, () => initShip(game));
-    let taxis = arrayOfThings<Ship>(NUM_TAXIS, () => initShip(game));
+    let maintenances = arrayOfThings<Maintenance>(NUM_MAINTENANCE, () =>
+      initMaintenance(game)
+    );
 
     ships.forEach((ship) => {
       game.add(ship);
       ship.actions.repeatForever(trader(stations, ship, game));
     });
 
-    taxis.forEach((ship) => {
-      ship.color = Color.Yellow;
-      ship.attributes.role = "Taxi";
-      ship.actions.repeatForever(taxi(ship, ships));
+    maintenances.forEach((ship) => {
+      ship.actions.repeatForever(maintenance(ship, ships));
 
       game.add(ship);
     });
@@ -173,6 +173,12 @@ function initStation(game: Game, onClick: (id: number) => void): Station {
 
 function initShip(game: Game): Ship {
   let ship = new Ship();
+  ship.pos = getRandomScreenPosition(game);
+  return ship;
+}
+
+function initMaintenance(game: Game): Maintenance {
+  let ship = new Maintenance();
   ship.pos = getRandomScreenPosition(game);
   return ship;
 }

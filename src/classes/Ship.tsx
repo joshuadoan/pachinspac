@@ -1,4 +1,4 @@
-import { vec, Text, Font } from "excalibur";
+import { vec, Text, Font, Color } from "excalibur";
 import name from "@scaleway/random-name";
 import { Meeple } from "./Meeple";
 import { MeepleColors } from "../consts";
@@ -19,5 +19,19 @@ export class Ship extends Meeple {
     });
 
     this.attributes.role = "Trader";
+  }
+}
+
+export class Maintenance extends Meeple {
+  constructor() {
+    super({
+      pos: vec(100, 100),
+      width: 10,
+      height: 5,
+      name: "Repair Drone Dave",
+      color: Color.Yellow,
+    });
+
+    this.attributes.role = "Maintenance";
   }
 }

@@ -65,20 +65,29 @@ function strand(ship: Ship, actions: ActionContext) {
     )
     .callMethod(() => {
       ship.attributes.status = "Stranded";
+      ship.attributes.log.push({
+        date: new Date().toString(),
+        message: "Ship broke down.",
+      });
     });
 }
 
-export function taxi(ship: Ship, ships: Station[]) {
+export function maintenance(ship: Ship, ships: Station[]) {
   return (actions: ActionContext) => {
     if (!actions.getQueue().isComplete()) return;
 
     let stranded = ships.find((ship) => ship.attributes.status === "Stranded");
 
-    if (!stranded || ship.attributes.status === "Picking up") {
+    if (!stranded || ship.attributes.status === "Repairing") {
       return;
     }
 
-    ship.attributes.status = "Picking up";
+    stranded.attributes.log.push({
+      date: new Date().toString(),
+      message: "Repaired by " + ship.name,
+    });
+
+    ship.attributes.status = "Repairing";
     ship.attributes.destination = stranded;
 
     actions
@@ -90,6 +99,10 @@ export function taxi(ship: Ship, ships: Station[]) {
           return;
         }
         stranded.attributes.status = "Idle";
+        ship.attributes.log.push({
+          date: new Date().toString(),
+          message: "Repaired " + stranded.name,
+        });
         ship.attributes.status = "Idle";
         ship.attributes.destination = null;
       });
