@@ -8,11 +8,18 @@ import {
   RocketLaunchIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
+import { themeChange } from "theme-change";
 
 import "./App.css";
+import { useEffect } from "react";
 
 function App() {
   const { state, dispatch } = useGame();
+
+  useEffect(() => {
+    themeChange(false);
+    // 👆 false parameter is required for react project
+  }, []);
 
   return (
     <div className="drawer">

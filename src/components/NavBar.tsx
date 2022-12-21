@@ -55,6 +55,16 @@ export function NavBar(props: {
           </div>
         )}
       </div>
+      <select data-choose-theme className="select select-ghost  max-w-xs">
+        <option value="cyberpunk">Default</option>
+        <option value="dark">Dark</option>
+        <option value="autumn">Autumn</option>
+        <option value="business">Business</option>
+        <option value="acid">Acid</option>
+        <option value="lemonade">Lemonade</option>
+        <option value="coffee">Coffee</option>
+        <option value="winter">Winter</option>
+      </select>
     </div>
   );
 }
