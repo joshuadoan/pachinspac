@@ -14,7 +14,7 @@ import { Station } from "../classes/Station";
 import { shuffle } from "../hooks/useGame";
 import { randomChance } from "../utils";
 
-export function trader(stations: Station[], ship: Ship, game: Game) {
+export function routines(stations: Station[], ship: Ship, game: Game) {
   return (actions: ActionContext) => {
     switch (ship.attributes.status) {
       case "Idle": {

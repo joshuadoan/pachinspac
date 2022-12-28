@@ -1,4 +1,5 @@
 import { Actor, Engine, vec } from "excalibur";
+import { Game } from "./classes/Game";
 import { Meeple } from "./classes/Meeple";
 import { Ship } from "./classes/Ship";
 import { Station } from "./classes/Station";
@@ -62,4 +63,13 @@ export function bySelectedFilters(filters: Filters, meeple: Meeple) {
     return true;
   }
   return false;
+}
+
+export function getCenterVec(game: Game) {
+  let center = vec(
+    (game.drawWidth / 2) * game.currentScene.camera.zoom,
+    (game.drawHeight / 2) * game.currentScene.camera.zoom
+  );
+
+  return center;
 }

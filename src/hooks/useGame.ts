@@ -12,10 +12,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
 import { Ship, Maintenance } from "../classes/Ship";
 import { Station } from "../classes/Station";
-import { arrayOfThings, getRandomScreenPosition, isMeeple } from "../utils";
+import {
+  arrayOfThings,
+  getCenterVec,
+  getRandomScreenPosition,
+  isMeeple,
+} from "../utils";
 import { Event, State } from "../types";
 import { Meeple } from "../classes/Meeple";
-import { maintenance, trader } from "../behaviors/behaviors";
+import { maintenance, routines } from "../routines/behaviors";
+import useCamera from "./useCamera";
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 1.2;
@@ -38,22 +44,22 @@ let defaultState = {
 function useGame() {
   let navigate = useNavigate();
   let { id } = useParams();
-  let gameRef = useRef<Game | null>();
+  let gameRef = useRef<Game | null>(null);
   let [state, dispatch] = useReducer(reducer, defaultState);
-
-  function getCenterVec(game: Game) {
-    let center = vec(
-      (game.drawWidth / 2) * game.currentScene.camera.zoom,
-      (game.drawHeight / 2) * game.currentScene.camera.zoom
-    );
-
-    return center;
-  }
+  let { initCamera, zoomToSelected, zoomOutAndCenter } = useCamera(
+    gameRef.current
+  );
 
   useEffect(() => {
     if (!gameRef.current) return;
     let meeples = gameRef.current?.currentScene.actors.filter(isMeeple);
     let selected = meeples?.find((a) => a.id === Number(id)) ?? null;
+
+    if (selected) {
+      zoomToSelected(selected, gameRef.current);
+    } else {
+      zoomOutAndCenter(gameRef.current);
+    }
 
     dispatch({
       type: "set-selected",
@@ -61,25 +67,10 @@ function useGame() {
         selected,
       },
     });
-
-    let { camera } = gameRef.current.currentScene;
-
-    if (selected) {
-      camera.clearAllStrategies();
-      camera.strategy.elasticToActor(selected, 0.3, 0.3);
-      camera.strategy.camera.zoomOverTime(MAX_ZOOM, 1000);
-    } else {
-      camera.clearAllStrategies();
-
-      let center = getCenterVec(gameRef.current);
-      camera.strategy.camera.move(center, 1000);
-      camera.strategy.camera.zoomOverTime(MIN_ZOOM, 1000);
-    }
   }, [id]);
 
   useEffect(() => {
     let game = new Game();
-    gameRef.current = game;
 
     let stations = arrayOfThings<Station>(NUM_STATIONS, () =>
       initStation(game, (id) => {
@@ -88,18 +79,18 @@ function useGame() {
     );
 
     let ships = arrayOfThings<Ship>(NUM_SHIPS, () => initShip(game));
+
     let maintenances = arrayOfThings<Maintenance>(NUM_MAINTENANCE, () =>
       initMaintenance(game)
     );
 
     ships.forEach((ship) => {
+      ship.actions.repeatForever(routines(stations, ship, game));
       game.add(ship);
-      ship.actions.repeatForever(trader(stations, ship, game));
     });
 
     maintenances.forEach((ship) => {
       ship.actions.repeatForever(maintenance(ship, ships));
-
       game.add(ship);
     });
 
@@ -107,13 +98,10 @@ function useGame() {
       game.add(station);
     });
 
-    let center = getCenterVec(game);
-    let { camera } = game.currentScene;
+    initCamera(game);
 
-    camera.strategy.camera.zoom = MIN_ZOOM;
-    camera.strategy.camera.move(center, 0);
-
-    gameRef.current.start();
+    game.start();
+    gameRef.current = game;
   }, []);
 
   useEffect(() => {
@@ -209,7 +197,6 @@ function reducer(state: State, event: Event) {
       };
     }
     case "update-filters": {
-      console.log("knknknk");
       return {
         ...state,
         filters: {
