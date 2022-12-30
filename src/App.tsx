@@ -12,6 +12,9 @@ import { themeChange } from "theme-change";
 
 import "./App.css";
 import { useEffect } from "react";
+import { maintenance, routines } from "./routines/behaviors";
+import { isShip, isStation } from "./utils";
+import { Roles } from "./types";
 
 function App() {
   const { state, dispatch } = useGame();
@@ -144,6 +147,28 @@ function App() {
                         )}
                       </div>
                       <Details actor={actor} />
+                      <div className="dropdown">
+                        <label tabIndex={0} className="btn m-1">
+                          Role: {actor.attributes.role}
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                        >
+                          {Object.values(Roles).map((role) => (
+                            <li key={role}>
+                              <button
+                                onClick={() => {
+                                  console.log("***");
+                                  actor.trade(state.actors.filter(isStation));
+                                }}
+                              >
+                                {role}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   )}
                 </li>

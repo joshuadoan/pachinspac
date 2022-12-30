@@ -11,6 +11,11 @@ export type State = {
   sidebarIsOpen: boolean;
 };
 
+export enum Roles {
+  Maintenance = "Maintenance",
+  Trader = "Trader",
+}
+
 export type Event = {
   type:
     | "toggle-paused"

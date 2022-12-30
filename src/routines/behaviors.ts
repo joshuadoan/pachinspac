@@ -1,20 +1,12 @@
 import { ActionContext, vec } from "excalibur";
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  animals,
-  colors,
-  languages,
-  names,
-} from "unique-names-generator";
 import { Game } from "../classes/Game";
 import { Meeple } from "../classes/Meeple";
 import { Ship } from "../classes/Ship";
 import { Station } from "../classes/Station";
-import { shuffle } from "../hooks/useGame";
 import { randomChance } from "../utils";
+import { getChat } from "./getChat";
 
-export function routines(stations: Station[], ship: Ship, game: Game) {
+export function routines(stations: Station[], ship: Ship) {
   return (actions: ActionContext) => {
     switch (ship.attributes.status) {
       case "Idle": {
@@ -107,28 +99,6 @@ export function maintenance(ship: Ship, ships: Station[]) {
         ship.attributes.destination = null;
       });
   };
-}
-
-function getChat(meeple: Meeple) {
-  let chat = uniqueNamesGenerator({
-    dictionaries: shuffle([
-      adjectives,
-      animals,
-      colors,
-      EMOTICONS,
-      languages,
-      names,
-    ]),
-    separator: " ",
-    length: 6,
-    seed: meeple?.id,
-    style: "lowerCase",
-  });
-
-  let punctuation = ["?", ".", "...", "!"][
-    Math.floor(Math.random() * ["?", ".", "...", "!"].length)
-  ];
-  return { chat, punctuation };
 }
 
 export const EMOTICONS = [

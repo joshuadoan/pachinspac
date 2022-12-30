@@ -21,8 +21,8 @@ export function shuffle(a: any[]) {
  */
 export function getRandomScreenPosition(game: Engine) {
   return vec(
-    Math.floor(Math.random() * game.drawWidth),
-    Math.floor(Math.random() * game.drawHeight)
+    Math.floor(Math.random() * game.drawWidth) * game.currentScene.camera.zoom,
+    Math.floor(Math.random() * game.drawHeight) * game.currentScene.camera.zoom
   );
 }
 
