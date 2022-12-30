@@ -48,6 +48,7 @@ function useGame() {
     [...Array(NUM_SHIPS)].forEach(function () {
       let ship = new Ship();
       ship.pos = getRandomScreenPosition(game);
+      ship.on("pointerdown", () => navigate("/" + ship.id));
       ship.trade(game.currentScene.actors.filter(isMeeple).filter(isStation));
       game.add(ship);
     });
