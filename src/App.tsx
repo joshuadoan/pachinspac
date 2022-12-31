@@ -123,7 +123,6 @@ function App() {
                       </div>
                     </Link>
                   )}
-
                   {actor.id === state.selected?.id && (
                     <div>
                       <div className="stat bg-white bg-opacity-50 space-y-2 mb-4">
@@ -140,7 +139,11 @@ function App() {
                           </div>
                         )}
                       </div>
-                      <Visitors actor={actor} />
+                      <Visitors
+                        visitors={Object.values(actor.visitors).filter(
+                          notEmpty
+                        )}
+                      />
                     </div>
                   )}
                 </li>
@@ -153,3 +156,7 @@ function App() {
 }
 
 export default App;
+
+function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+  return value !== null && value !== undefined;
+}

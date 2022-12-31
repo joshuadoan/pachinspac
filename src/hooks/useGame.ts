@@ -10,8 +10,8 @@ import { Color } from "excalibur";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
 import { MeepleColors } from "../consts";
 
-const NUM_TRADERS = 42;
-const NUM_STATIONS = 14;
+const NUM_TRADERS = 24;
+const NUM_STATIONS = 6;
 const NUM_REPAIR = 1;
 
 let defaultState = {
@@ -92,15 +92,19 @@ function useGame() {
 
   useEffect(() => {
     if (!gameRef.current) return;
-    let meeples = gameRef.current?.currentScene.actors.filter(isMeeple);
-    let selected = meeples?.find((a) => a.id === Number(id)) ?? null;
 
-    if (selected) {
-      zoomToSelected(selected, gameRef.current.currentScene.camera);
+    if (state.selected) {
+      zoomToSelected(state.selected, gameRef.current.currentScene.camera);
     } else {
       let center = getCenterVec(gameRef.current);
       zoomOutToPoint(gameRef.current.currentScene.camera, center);
     }
+  }, [state.selected]);
+
+  useEffect(() => {
+    if (!gameRef.current) return;
+    let meeples = gameRef.current?.currentScene.actors.filter(isMeeple);
+    let selected = meeples?.find((a) => a.id === Number(id)) ?? null;
 
     dispatch({
       type: "set-selected",

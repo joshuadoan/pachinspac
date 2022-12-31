@@ -4,15 +4,13 @@ import { Meeple } from "../classes/Meeple";
 import { Avatar } from "./Avatar";
 import { getChat } from "../routines/getChat";
 
-export function Visitors(props: { actor: Meeple }) {
-  let { actor } = props;
-  let visitors = Object.values(actor.visitors).filter((v) => !!v);
-
+export function Visitors(props: { visitors: Meeple[] }) {
+  if (!props.visitors.length) return null;
   return (
     <div>
-      <h2 className="px-4 py-2">visitors {visitors.length}</h2>
+      <h2 className="px-4 py-2">visitors {props.visitors.length}</h2>
       <div className="flex gap-2 bg-white px-4 py-2 mb-4">
-        {visitors.map(
+        {props.visitors.map(
           (visitor) =>
             visitor && (
               <Avatar
@@ -25,7 +23,7 @@ export function Visitors(props: { actor: Meeple }) {
         )}
       </div>
       <div className="px-4">
-        {Object.values(actor.visitors).map((actor) => {
+        {props.visitors.map((actor) => {
           if (!actor) return null;
           return (
             <div
