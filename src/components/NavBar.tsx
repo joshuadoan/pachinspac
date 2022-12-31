@@ -49,7 +49,7 @@ export function NavBar(props: {
                   />
                   {state.selected.name}
                 </Link>
-                <div className="badge">{state.selected.attributes.status}</div>
+                <div className="badge">{state.selected.status}</div>
               </li>
             </ul>
           </div>

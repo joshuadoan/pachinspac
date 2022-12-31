@@ -1,29 +1,26 @@
 import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
-import { Ship, Maintenance } from "../classes/Ship";
-import { Station } from "../classes/Station";
-import {
-  getCenterVec,
-  getRandomScreenPosition,
-  isMeeple,
-  isStation,
-} from "../utils";
+import name from "@scaleway/random-name";
+import { getCenterVec, getRandomScreenPosition, isMeeple } from "../utils";
 import { Meeple } from "../classes/Meeple";
 import { zoomOutToPoint, zoomToSelected } from "../utils/cameraUtils";
 import { reducer } from "./reducer";
+import { Color } from "excalibur";
+import { names, uniqueNamesGenerator } from "unique-names-generator";
+import { MeepleColors } from "../consts";
 
-const NUM_SHIPS = 42;
+const NUM_TRADERS = 42;
 const NUM_STATIONS = 14;
-const NUM_MAINTENANCE = 1;
+const NUM_REPAIR = 1;
 
 let defaultState = {
   isPaused: false,
   actors: [],
   filters: {
-    Trader: true,
-    Station: true,
-    Maintenance: true,
+    trader: true,
+    station: true,
+    repair: true,
   },
   selected: null,
   sidebarIsOpen: false,
@@ -39,23 +36,39 @@ function useGame() {
   useEffect(() => {
     let game = new Game();
 
+    // Stations for trading
     [...Array(NUM_STATIONS)].forEach(() => {
-      let station = new Station();
+      let station = new Meeple({
+        pos: getRandomScreenPosition(game),
+        color: Color.Orange,
+      });
+      station.role = "station";
+      station.showLabel = true;
       station.on("pointerdown", () => navigate("/" + station.id));
       game.add(station);
     });
 
-    [...Array(NUM_SHIPS)].forEach(function () {
-      let ship = new Ship();
-      ship.pos = getRandomScreenPosition(game);
-      ship.on("pointerdown", () => navigate("/" + ship.id));
-      ship.trade(game.currentScene.actors.filter(isMeeple).filter(isStation));
-      game.add(ship);
-    });
+    // Traders
+    [...Array(NUM_TRADERS)].forEach(() => {
+      let randomName = uniqueNamesGenerator({
+        dictionaries: [names, [name("", " ")]],
+        separator: " ",
+        length: 2,
+      });
 
-    [...Array(NUM_MAINTENANCE)].forEach(function () {
-      let ship = new Maintenance();
-      ship.pos = getRandomScreenPosition(game);
+      let ship = new Meeple({
+        pos: getRandomScreenPosition(game),
+        color: MeepleColors[Math.floor(Math.random() * MeepleColors.length)],
+        name: randomName,
+      });
+
+      ship.role = "trader";
+      ship.on("pointerdown", () => navigate("/" + ship.id));
+      ship.trade(
+        game.currentScene.actors
+          .filter(isMeeple)
+          .filter((m) => m.role === "station")
+      );
       game.add(ship);
     });
 
@@ -72,7 +85,7 @@ function useGame() {
           actors: game?.currentScene.actors as Meeple[],
         },
       });
-    }, 100);
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);

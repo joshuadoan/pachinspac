@@ -1,7 +1,7 @@
 import useGame from "./hooks/useGame";
 import { Link } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
-import { Details } from "./components/Details";
+import { Visitors } from "./components/Visitors";
 import { Avatar } from "./components/Avatar";
 import {
   BuildingStorefrontIcon,
@@ -12,9 +12,6 @@ import { themeChange } from "theme-change";
 
 import "./App.css";
 import { useEffect } from "react";
-import { maintenance, routines } from "./routines/behaviors";
-import { isShip, isStation } from "./utils";
-import { Roles } from "./types";
 
 function App() {
   const { state, dispatch } = useGame();
@@ -53,7 +50,7 @@ function App() {
         <div className=" w-80 bg-base-100 text-base-content border-r border-base-200 mt-16 ">
           {!state.selected && (
             <form className="text-sm flex gap-4  px-4 py-3">
-              {["Trader", "Station", "Maintenance"].map((filter) => (
+              {["trader", "station", "repair"].map((filter) => (
                 <label key={filter} className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -72,9 +69,9 @@ function App() {
                   />
                   {
                     {
-                      Trader: <RocketLaunchIcon className="w-6 h-6" />,
-                      Station: <BuildingStorefrontIcon className="w-6 h-6" />,
-                      Maintenance: <WrenchIcon className="w-6 h-6" />,
+                      trader: <RocketLaunchIcon className="w-6 h-6" />,
+                      station: <BuildingStorefrontIcon className="w-6 h-6" />,
+                      repair: <WrenchIcon className="w-6 h-6" />,
                     }[filter]
                   }
                 </label>
@@ -84,8 +81,9 @@ function App() {
           <ul className=" space-y-2">
             {state.actors
               .filter((meeple) => {
-                if (!state.selected && meeple.attributes) {
-                  return state.filters[meeple.attributes.role];
+                if (!state.selected) {
+                  console.log(state.filters);
+                  return state.filters[meeple.role];
                 }
 
                 if (state.selected && meeple.id === state.selected.id) {
@@ -114,15 +112,13 @@ function App() {
                       <div>
                         <div className="text-sm font-light">
                           <span className="badge badge-primary badge-outline">
-                            {actor.attributes.role}
+                            {actor.role}
                           </span>
                         </div>
                         {actor.name}
                         <div className="text-sm font-light">
-                          <span className="badge">
-                            {actor.attributes.status}
-                          </span>{" "}
-                          °{Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
+                          <span className="badge">{actor.status}</span> °
+                          {Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                         </div>
                       </div>
                     </Link>
@@ -135,40 +131,16 @@ function App() {
                           loc °{Math.round(actor.pos.y)} °
                           {Math.round(actor.pos.x)}
                         </div>
-                        <div className="stat-value">
-                          {actor.attributes.status}
-                        </div>
-                        {actor.attributes.destination && (
+                        <div className="stat-value">{actor.status}</div>
+                        {actor.destination && (
                           <div className="stat-desc">
-                            <Link to={`/${actor.attributes.destination.id}`}>
-                              {actor.attributes.destination?.name}
+                            <Link to={`/${actor.destination.id}`}>
+                              {actor.destination?.name}
                             </Link>
                           </div>
                         )}
                       </div>
-                      <Details actor={actor} />
-                      <div className="dropdown">
-                        <label tabIndex={0} className="btn m-1">
-                          Role: {actor.attributes.role}
-                        </label>
-                        <ul
-                          tabIndex={0}
-                          className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                        >
-                          {Object.values(Roles).map((role) => (
-                            <li key={role}>
-                              <button
-                                onClick={() => {
-                                  console.log("***");
-                                  actor.trade(state.actors.filter(isStation));
-                                }}
-                              >
-                                {role}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      <Visitors actor={actor} />
                     </div>
                   )}
                 </li>

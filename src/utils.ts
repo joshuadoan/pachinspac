@@ -1,9 +1,6 @@
 import { Actor, Engine, vec } from "excalibur";
 import { Game } from "./classes/Game";
 import { Meeple } from "./classes/Meeple";
-import { Ship } from "./classes/Ship";
-import { Station } from "./classes/Station";
-import { Filters } from "./types";
 
 /**
  * Shuffles array
@@ -44,25 +41,9 @@ export const isMeeple = (shape: Actor): shape is Meeple =>
  */
 export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
 
-/**
- * Type guard for converting Meeple into a subclass
- */
-export const isStation = (shape: Meeple): shape is Station =>
-  shape instanceof Station;
-
 export function randomChance() {
   let random = Math.random();
   return random < 0.01 ? true : false;
-}
-
-export function bySelectedFilters(filters: Filters, meeple: Meeple) {
-  if (filters.ships && isShip(meeple)) {
-    return true;
-  }
-  if (filters.stations && isStation(meeple)) {
-    return true;
-  }
-  return false;
 }
 
 export function getCenterVec(game: Game) {
