@@ -43,7 +43,7 @@ export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
 
 export function randomChance() {
   let random = Math.random();
-  return random < 0.01 ? true : false;
+  return random < 0.1 ? true : false;
 }
 
 export function getCenterVec(game: Game) {

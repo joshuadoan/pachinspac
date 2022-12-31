@@ -2,7 +2,12 @@ import { useEffect, useReducer, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Game } from "../classes/Game";
 import name from "@scaleway/random-name";
-import { getCenterVec, getRandomScreenPosition, isMeeple } from "../utils";
+import {
+  getCenterVec,
+  getRandomScreenPosition,
+  isMeeple,
+  randomChance,
+} from "../utils";
 import { Meeple } from "../classes/Meeple";
 import { zoomOutToPoint, zoomToSelected } from "../utils/cameraUtils";
 import { reducer } from "./reducer";
@@ -42,7 +47,7 @@ function useGame() {
         pos: getRandomScreenPosition(game),
         color: Color.Orange,
       });
-      station.role = "station";
+      station.vend();
       station.showLabel = true;
       station.on("pointerdown", () => navigate("/" + station.id));
       game.add(station);
@@ -62,7 +67,6 @@ function useGame() {
         name: randomName,
       });
 
-      ship.role = "trader";
       ship.on("pointerdown", () => navigate("/" + ship.id));
       ship.trade(
         game.currentScene.actors
@@ -72,12 +76,55 @@ function useGame() {
       game.add(ship);
     });
 
+    // Repair
+    [...Array(NUM_REPAIR)].forEach(() => {
+      let randomName = uniqueNamesGenerator({
+        dictionaries: [names, [name("", " ")]],
+        separator: " ",
+        length: 2,
+      });
+
+      let ship = new Meeple({
+        pos: getRandomScreenPosition(game),
+        color: Color.Yellow,
+        name: randomName,
+        width: 15,
+      });
+
+      ship.on("pointerdown", () => navigate("/" + ship.id));
+      ship.repair(
+        game.currentScene.actors
+          .filter(isMeeple)
+          .filter((m) => m.role === "trader"),
+        game.currentScene.actors
+          .filter(isMeeple)
+          .filter((m) => m.role === "station")
+      );
+      game.add(ship);
+    });
+
     game.start();
     gameRef.current = game;
+  }, []);
 
-    // Update actors state on interval
+  useEffect(() => {
     let interval = setInterval(function () {
       let game = gameRef.current;
+
+      let random = randomChance();
+
+      if (random) {
+        let trader = game?.currentScene.actors
+          .filter(isMeeple)
+          .filter((m) => m.status === "traveling")[
+          Math.floor(Math.random() * game?.currentScene.actors.length)
+        ];
+
+        if (trader) {
+          trader.actions.clearActions();
+          trader.status = "stranded";
+        }
+      }
 
       dispatch({
         type: "update-actors",

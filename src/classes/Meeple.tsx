@@ -34,6 +34,10 @@ export class Meeple extends Actor {
   public status: string = "idle";
   public role: "trader" | "station" | "repair" = "trader";
   public showLabel: boolean = false;
+  public log: {
+    date: string;
+    message: string;
+  }[] = [];
 
   constructor(options: MeepleOptions) {
     super({
@@ -70,7 +74,7 @@ export class Meeple extends Actor {
     this.addChild(actor);
   }
 
-  public onPreUpdate(_engine: Engine, _delta: number): void {
+  public onPostUpdate(_engine: Engine, _delta: number): void {
     let label = this.children.find((c) => c.name === "label");
 
     if (!label) return;
@@ -82,7 +86,12 @@ export class Meeple extends Actor {
     }
   }
 
+  public vend() {
+    this.role = "station";
+  }
+
   public trade(stations: Meeple[]) {
+    this.role = "trader";
     this.actions.repeatForever((actions) => {
       let station = stations[Math.floor(Math.random() * stations.length)];
 
@@ -96,8 +105,16 @@ export class Meeple extends Actor {
           this.status = "visiting";
           if (this.destination) {
             this.destination.visitors[this.id] = this;
+            this.log.push({
+              date: new Date().toString(),
+              message: "Visited " + this.destination.name,
+            });
+
+            this.destination.log.push({
+              date: new Date().toString(),
+              message: "Visited by " + this.name,
+            });
           }
-          // this.attributes.chat = [chat + punctuation];
         })
         .delay(10 * 1000)
         .callMethod(() => {
@@ -110,5 +127,41 @@ export class Meeple extends Actor {
     });
   }
 
-  public repair() {}
+  public repair(traders: Meeple[], stations: Meeple[]) {
+    this.role = "repair";
+
+    this.actions.repeatForever((actions) => {
+      if (!actions.getQueue().isComplete()) return;
+
+      let stranded = traders.find((ship) => ship.status === "stranded");
+
+      if (!stranded || this.status === "repairing") {
+        return;
+      }
+
+      stranded.log.push({
+        date: new Date().toString(),
+        message: "Repaired by " + this.name,
+      });
+
+      this.status = "Repairing";
+      this.destination = stranded;
+
+      actions
+        .blink(500, 250, 3)
+        .meet(stranded, 100)
+        .blink(500, 250, 3)
+        .callMethod(() => {
+          if (!stranded) {
+            return;
+          }
+
+          this.log.push({
+            date: new Date().toString(),
+            message: "Repaired " + stranded.name,
+          });
+          stranded.trade(stations);
+        });
+    });
+  }
 }
