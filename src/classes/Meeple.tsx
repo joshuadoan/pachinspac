@@ -101,19 +101,15 @@ export class Meeple extends Actor {
   public trade(stations: Meeple[]) {
     this.role = "trader";
     this.actions.repeatForever((actions) => {
-      let randomTime = Math.floor(Math.random() * 5000);
+      let randomTime = Math.floor(Math.random() * 1);
       switch (this.state) {
         case "off": {
           actions.delay(randomTime).callMethod(() => this.dispatch("start"));
           return;
         }
         case "idle": {
-          actions.delay(randomTime).callMethod(() => {
-            if (randomChance()) {
-              this.dispatch("break");
-            } else {
-              this.dispatch("calibrate");
-            }
+          actions.delay(1000).callMethod(() => {
+            this.dispatch("calibrate");
           });
 
           return;
@@ -132,13 +128,20 @@ export class Meeple extends Actor {
             actions.callMethod(() => this.dispatch("stop")).delay(randomTime);
             return;
           }
+
           let speed = Math.floor(Math.random() * 100) + 50;
 
           actions
-            .delay(randomTime)
             .meet(this.destination, speed)
             .delay(randomTime)
-            .moveBy(vec(5, 5), speed)
+            .moveBy(
+              vec(
+                Math.floor(Math.random() * -5) + 5,
+                Math.floor(Math.random() * -5) + 5
+              ),
+              speed
+            )
+            .delay(randomTime)
             .callMethod(() => this.dispatch("stop"));
           return;
         }

@@ -17,7 +17,7 @@ import useShip from "./useShip";
 
 const NUM_TRADERS = 10;
 const NUM_STATIONS = 6;
-const NUM_REPAIR = 1;
+const NUM_REPAIR = 2;
 
 let defaultState = {
   isPaused: false,
