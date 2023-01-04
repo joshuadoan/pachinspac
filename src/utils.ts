@@ -39,11 +39,10 @@ export const isMeeple = (shape: Actor): shape is Meeple =>
 /**
  * Type guard for converting Meeple into a subclass
  */
-export const isShip = (shape: Meeple): shape is Ship => shape instanceof Ship;
 
-export function randomChance() {
+export function randomChance(percent: number = 0.1) {
   let random = Math.random();
-  return random < 0.1 ? true : false;
+  return random < percent ? true : false;
 }
 
 export function getCenterVec(game: Game) {

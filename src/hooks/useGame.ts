@@ -13,9 +13,9 @@ import { zoomOutToPoint, zoomToSelected } from "../utils/cameraUtils";
 import { reducer } from "./reducer";
 import { Color } from "excalibur";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
-import { MeepleColors } from "../consts";
+import useShip from "./useShip";
 
-const NUM_TRADERS = 24;
+const NUM_TRADERS = 10;
 const NUM_STATIONS = 6;
 const NUM_REPAIR = 1;
 
@@ -24,17 +24,19 @@ let defaultState = {
   actors: [],
   filters: {
     trader: true,
-    station: true,
-    repair: true,
+    station: false,
+    repair: false,
   },
   selected: null,
   sidebarIsOpen: false,
+  sidebarTab: "visitors",
 };
 
 function useGame() {
   let navigate = useNavigate();
   let { id } = useParams();
   let gameRef = useRef<Game | null>(null);
+  let { createShip } = useShip();
 
   let [state, dispatch] = useReducer(reducer, defaultState);
 
@@ -42,6 +44,8 @@ function useGame() {
     let game = new Game();
 
     // Stations for trading
+    let stations: Meeple[] = [];
+
     [...Array(NUM_STATIONS)].forEach(() => {
       let station = new Meeple({
         pos: getRandomScreenPosition(game),
@@ -50,29 +54,14 @@ function useGame() {
       station.vend();
       station.showLabel = true;
       station.on("pointerdown", () => navigate("/" + station.id));
+      stations.push(station);
       game.add(station);
     });
 
     // Traders
     [...Array(NUM_TRADERS)].forEach(() => {
-      let randomName = uniqueNamesGenerator({
-        dictionaries: [names, [name("", " ")]],
-        separator: " ",
-        length: 2,
-      });
-
-      let ship = new Meeple({
-        pos: getRandomScreenPosition(game),
-        color: MeepleColors[Math.floor(Math.random() * MeepleColors.length)],
-        name: randomName,
-      });
-
-      ship.on("pointerdown", () => navigate("/" + ship.id));
-      ship.trade(
-        game.currentScene.actors
-          .filter(isMeeple)
-          .filter((m) => m.role === "station")
-      );
+      let ship = createShip(game);
+      ship.trade(stations);
       game.add(ship);
     });
 
@@ -132,7 +121,7 @@ function useGame() {
           actors: game?.currentScene.actors as Meeple[],
         },
       });
-    }, 500);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);

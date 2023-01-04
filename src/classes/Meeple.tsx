@@ -9,6 +9,8 @@ import {
   CollisionType,
   Engine,
 } from "excalibur";
+import { createMachine, StateDefinition } from "../machines/createMachine";
+import { randomChance } from "../utils";
 import { randomName } from "./randomName";
 export type Role = "Unknown" | "Trader" | "Station" | "Maintenance";
 export type ShipStatus = "Idle" | "Traveling" | "Visiting" | "Stranded";
@@ -24,6 +26,31 @@ type MeepleOptions = {
   name?: string;
 };
 
+export type ShipState = "off" | "idle" | "moving" | "broken" | "calibrating";
+export type ShipEvent = "start" | "stop" | "move" | "calibrate" | "break";
+
+let definition: StateDefinition<ShipState, ShipEvent> = {
+  idle: {
+    break: "broken",
+    calibrate: "calibrating",
+    stop: "off",
+  },
+  off: {
+    start: "idle",
+  },
+  moving: {
+    break: "broken",
+    stop: "off",
+  },
+  calibrating: {
+    move: "moving",
+    stop: "off",
+  },
+  broken: {},
+};
+
+let machine = createMachine<ShipState, ShipEvent>(definition);
+
 export class Meeple extends Actor {
   public health: number = 100;
   public selected: boolean = false;
@@ -35,9 +62,14 @@ export class Meeple extends Actor {
   public role: "trader" | "station" | "repair" = "trader";
   public showLabel: boolean = false;
   public log: {
-    date: string;
+    date: Date;
     message: string;
   }[] = [];
+
+  private state: ShipState = "off";
+  private dispatch = (event: ShipEvent) => {
+    this.state = machine.dispatch(this.state, event);
+  };
 
   constructor(options: MeepleOptions) {
     super({
@@ -47,6 +79,106 @@ export class Meeple extends Actor {
       color: Color.Blue,
       name: randomName(),
       ...options,
+    });
+  }
+
+  public onPostUpdate(_engine: Engine, _delta: number): void {
+    let label = this.children.find((c) => c.name === "label");
+    if (!label) return;
+
+    if (!this.showLabel) {
+      label.active = false;
+    } else {
+      label.active = true;
+    }
+  }
+
+  public vend() {
+    this.status = "open";
+    this.role = "station";
+  }
+
+  public trade(stations: Meeple[]) {
+    this.role = "trader";
+    this.actions.repeatForever((actions) => {
+      let randomTime = Math.floor(Math.random() * 5000);
+      switch (this.state) {
+        case "off": {
+          actions.delay(randomTime).callMethod(() => this.dispatch("start"));
+          return;
+        }
+        case "idle": {
+          actions.delay(randomTime).callMethod(() => {
+            if (randomChance()) {
+              this.dispatch("break");
+            } else {
+              this.dispatch("calibrate");
+            }
+          });
+
+          return;
+        }
+        case "calibrating": {
+          let station = stations[Math.floor(Math.random() * stations.length)];
+          this.destination = station;
+          actions
+            .delay(randomTime)
+            .callMethod(() => this.dispatch("move"))
+            .blink(500, 250, 3);
+          return;
+        }
+        case "moving": {
+          if (!this.destination) {
+            actions.callMethod(() => this.dispatch("stop")).delay(randomTime);
+            return;
+          }
+          let speed = Math.floor(Math.random() * 100) + 50;
+
+          actions
+            .delay(randomTime)
+            .meet(this.destination, speed)
+            .delay(randomTime)
+            .moveBy(vec(5, 5), speed)
+            .callMethod(() => this.dispatch("stop"));
+          return;
+        }
+      }
+    });
+  }
+
+  public repair(traders: Meeple[], stations: Meeple[]) {
+    this.role = "repair";
+
+    this.actions.repeatForever((actions) => {
+      let stranded = traders.find((ship) => ship.state === "broken");
+
+      if (!stranded || this.status === "repairing") {
+        return;
+      }
+
+      stranded.log.push({
+        date: new Date(),
+        message: "Repaired by " + this.name,
+      });
+
+      this.status = "Repairing";
+      this.destination = stranded;
+
+      actions
+        .blink(500, 250, 3)
+        .meet(stranded, 100)
+        .blink(500, 250, 3)
+        .callMethod(() => {
+          if (!stranded) {
+            return;
+          }
+
+          this.log.push({
+            date: new Date(),
+            message: "Repaired " + stranded.name,
+          });
+          stranded.trade(stations);
+        });
     });
   }
 
@@ -72,96 +204,5 @@ export class Meeple extends Actor {
     actor.graphics.use(Label);
 
     this.addChild(actor);
-  }
-
-  public onPostUpdate(_engine: Engine, _delta: number): void {
-    let label = this.children.find((c) => c.name === "label");
-
-    if (!label) return;
-
-    if (!this.showLabel) {
-      label.active = false;
-    } else {
-      label.active = true;
-    }
-  }
-
-  public vend() {
-    this.role = "station";
-  }
-
-  public trade(stations: Meeple[]) {
-    this.role = "trader";
-    this.actions.repeatForever((actions) => {
-      let station = stations[Math.floor(Math.random() * stations.length)];
-
-      this.status = "traveling";
-      this.destination = station;
-      // let { chat, punctuation } = getChat(this.id);
-
-      actions
-        .meet(this.destination, Math.floor(Math.random() * 100) + 50)
-        .callMethod(() => {
-          this.status = "visiting";
-          if (this.destination) {
-            this.destination.visitors[this.id] = this;
-            this.log.push({
-              date: new Date().toString(),
-              message: "Visited " + this.destination.name,
-            });
-
-            this.destination.log.push({
-              date: new Date().toString(),
-              message: "Visited by " + this.name,
-            });
-          }
-        })
-        .delay(10 * 1000)
-        .callMethod(() => {
-          if (this.destination) {
-            this.destination.visitors[this.id] = null;
-          }
-
-          this.status = "Idle";
-        });
-    });
-  }
-
-  public repair(traders: Meeple[], stations: Meeple[]) {
-    this.role = "repair";
-
-    this.actions.repeatForever((actions) => {
-      if (!actions.getQueue().isComplete()) return;
-
-      let stranded = traders.find((ship) => ship.status === "stranded");
-
-      if (!stranded || this.status === "repairing") {
-        return;
-      }
-
-      stranded.log.push({
-        date: new Date().toString(),
-        message: "Repaired by " + this.name,
-      });
-
-      this.status = "Repairing";
-      this.destination = stranded;
-
-      actions
-        .blink(500, 250, 3)
-        .meet(stranded, 100)
-        .blink(500, 250, 3)
-        .callMethod(() => {
-          if (!stranded) {
-            return;
-          }
-
-          this.log.push({
-            date: new Date().toString(),
-            message: "Repaired " + stranded.name,
-          });
-          stranded.trade(stations);
-        });
-    });
   }
 }

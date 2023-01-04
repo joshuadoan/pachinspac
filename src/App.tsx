@@ -82,7 +82,6 @@ function App() {
             {state.actors
               .filter((meeple) => {
                 if (!state.selected) {
-                  console.log(state.filters);
                   return state.filters[meeple.role];
                 }
 
@@ -117,7 +116,7 @@ function App() {
                         </div>
                         {actor.name}
                         <div className="text-sm font-light">
-                          <span className="badge">{actor.status}</span> °
+                          <span className="badge">{actor.state}</span> °
                           {Math.round(actor.pos.y)} °{Math.round(actor.pos.x)}
                         </div>
                       </div>
@@ -130,7 +129,7 @@ function App() {
                           loc °{Math.round(actor.pos.y)} °
                           {Math.round(actor.pos.x)}
                         </div>
-                        <div className="stat-value">{actor.status}</div>
+                        <div className="stat-value">{actor.state}</div>
                         {actor.destination && (
                           <div className="stat-desc">
                             <Link to={`/${actor.destination.id}`}>
@@ -139,11 +138,25 @@ function App() {
                           </div>
                         )}
                       </div>
+                      <div className="tabs">
+                        <a className="tab tab-lifted">visitors</a>
+                        <a className="tab tab-lifted tab-active">log</a>
+                      </div>
                       <Visitors
                         visitors={Object.values(actor.visitors).filter(
                           notEmpty
                         )}
                       />
+                      <ul className="flex flex-col space-y-4 px-4 mt-4">
+                        {state.selected.log.map((l) => (
+                          <li className="flex  gap-2">
+                            <div className="badge badge-secondary">
+                              {l.date.getMilliseconds()}
+                            </div>
+                            {l.message}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </li>
