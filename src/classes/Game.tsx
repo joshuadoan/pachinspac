@@ -3,8 +3,8 @@ import { Color, DisplayMode, Engine } from "excalibur";
 export class Game extends Engine {
   constructor() {
     super({
-      displayMode: DisplayMode.FitContainerAndZoom,
-      backgroundColor: Color.Black,
+      displayMode: DisplayMode.FillContainer,
+      backgroundColor: Color.Azure,
       canvasElementId: "pepper",
     });
   }
