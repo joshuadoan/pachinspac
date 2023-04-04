@@ -1,6 +1,5 @@
-import { Actor, Engine, vec } from "excalibur";
+import { Engine, vec } from "excalibur";
 import { Game } from "./classes/Game";
-import { Meeple } from "./classes/Meeple";
 
 /**
  * Shuffles array
@@ -17,9 +16,16 @@ export function shuffle(a: any[]) {
  * Returns an excalibur vector at a random point on the canvas
  */
 export function getRandomScreenPosition(game: Engine) {
+  let maxX = game.drawWidth - game.drawWidth * 0.1;
+  let maxY = game.drawHeight - game.drawHeight * 0.1;
+  let minY = game.drawHeight * 0.1;
+  let minX = game.drawWidth * 0.1;
+
   return vec(
-    Math.floor(Math.random() * game.drawWidth) * game.currentScene.camera.zoom,
-    Math.floor(Math.random() * game.drawHeight) * game.currentScene.camera.zoom
+    Math.floor(Math.random() * (maxX - minX) + minX) *
+      game.currentScene.camera.zoom,
+    Math.floor(Math.random() * (maxY - minY) + minY) *
+      game.currentScene.camera.zoom
   );
 }
 
@@ -29,12 +35,6 @@ export function getRandomScreenPosition(game: Engine) {
 export function arrayOfThings<Type>(number: number, expression: () => Type) {
   return [...Array(number)].map(expression);
 }
-
-/**
- * Type guard for converting Actors into our custom Actor called Meeple
- */
-export const isMeeple = (shape: Actor): shape is Meeple =>
-  shape instanceof Meeple;
 
 /**
  * Type guard for converting Meeple into a subclass
